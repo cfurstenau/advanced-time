@@ -13,7 +13,7 @@ module.exports = function(app, passport) {
 			if (!user) {
 				res.send({success: false});
 			} else {
-				res.send({success: true, message: user.local.username + " logged in"});
+				res.send({success: true, user: user.local.username});
 			}
 		})(req, res); //the (req, res) here passes them to passport
 	});

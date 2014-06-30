@@ -41,16 +41,14 @@
 			      console.log(data);
 			      
 			      if(!data.success) {
+			        
 			        //reorganize so there is just $scope.loginError
 			        //will require changes here as well as html below
+			        $scope.message = "Login failed";
 			      
-			        //if not succesful, bind error to erro variables
-			        $scope.errorUsername = data.errors.username;
-			        $scope.errorPassword = data.errors.password;
 			      }
 			      else{
 			        //if succesful, bind success message to message
-			        $scope.message = data.message;
 			        $scope.authenticated = true;
 			      }
 			    });
@@ -76,29 +74,25 @@
   
   
     <!-- SHOW ERROR/SUCCESS MESSAGES -->
-	  <div id="messages" ng-show="message">{{ message }}</div>
+	
 	  
     <div class="container">
 
       <form class="form-signin ng-hide" ng-submit="processForm()" ng-hide="authenticated">
         <h2 class="form-signin-heading">LOG IN</h2>
         
-        <div id="username-group" class="form-group" ng-class="{ 'has-error' : errorUsername }">
+        <div id="username-group" class="form-group" ng-class="{ 'has-error' : message }">
+        <span class="help-block" ng-show="message">{{ message }}</span>
         <input name="username" type="username" class="form-control" placeholder="Username" required autofocus/ ng-model="formData.username">
-        <span class="help-block" ng-show="errorUsername">{{ errorUsername }}</span>
         </div>
 
-        <div id="password-group" class="form-group" ng-class="{ 'has-error' : errorPassword }">
+        <div id="password-group" class="form-group" ng-class="{ 'has-error' : message }">
         <input name="password" type="password" class="form-control" placeholder="Password" required ng-model="formData.password"> 
-        <span class="help-block" ng-show="errorPassword">{{ errorPassword }}</span>
         </div>
         
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
       
-      <pre>
-        {{formData}}
-      </pre>
 
     </div> <!-- /container -->
 
