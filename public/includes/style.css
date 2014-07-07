@@ -65,3 +65,70 @@ background-color:rgb(27,87,158);
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+
+.navbar{
+margin-bottom: 60px;
+background-color:rgb(27,87,158);
+
+}
+.navbar-brand{
+padding: 0px;
+width:250px;
+height:50px;
+width:50px;
+margin-right: 170px;
+}
+.navbar-default .navbar-nav>li>a{
+color: white;
+
+}
+.navbar-default .navbar-nav>li>a:hover{
+color: #FFFF66;
+
+}
+
+.topbar {
+padding-bottom:55px;
+text-align:center;
+}
+
+.topbar .col-md-2 {
+padding-bottom:10px;
+padding-top:10px;
+}
+
+.topbar .col-md-4 {
+padding-bottom:10px;
+padding-top:10px;
+}
+
+.AddLineRow {
+padding-bottom:50px;
+}
+
+.AddLineRow .col-md-4  {
+background-color:rgb(27,87,158);
+padding:15px;
+}
+
+.AddLineRow .col-md-2  {
+background-color:rgb(27,87,158);
+padding:15px;
+}
+.ButtonRow  {
+text-align:center;
+}
+
+.red{
+color:red;
+}
+
+.green{
+color:green;
+}
+.blue{
+color:blue;
+}
+
+

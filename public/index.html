@@ -29,6 +29,7 @@
 		  // create a blank object to hold our form information
 			// $scope will allow this to pass between controller and view
 			$scope.formData = {};
+			$scope.signedin = true;
 			
 			//process the form
 			$scope.processForm = function() {
@@ -50,6 +51,7 @@
 			      else{
 			        //if succesful, bind success message to message
 			        $scope.authenticated = true;
+			        $scope.signedin = false;
 			      }
 			    });
 			  };
@@ -95,6 +97,175 @@
       
 
     </div> <!-- /container -->
+    
+    <div class ="container ng-hide" ng-hide="signedin">
+		
+		<div class="topbar">
+		  <div class="col-md-2">
+			<div class="btn-group btn-group-lg">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					<span class="glyphicon glyphicon-time"></span> New <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+				  <li><a href="#">Date</a></li>
+				  <li><a href="#">Date</a></li>
+				</ul>
+			 </div>
+		  </div>
+		  <div class="col-md-4">
+			<div class="input-group input-group-lg">
+				<input type="text" class="form-control" placeholder="Approver">
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-thumbs-up"></span>
+					</button>
+				</span>	
+			</div>
+		  </div>
+
+		  <div class="col-md-2">
+			<button type="button" class="btn btn-warning btn-lg">
+				<span class="glyphicon glyphicon-remove-circle"></span> Clear Hrs
+			</button>
+		  </div>
+		  
+		  <div class="col-md-2">
+			<button type="button" class="btn btn-info btn-lg">
+				<span class="glyphicon glyphicon-calendar"></span> Sat/Sun
+			</button>
+		  </div>
+		</div>
+		
+		<table class="table table-striped table-condensed">
+			<tbody>
+				<tr class="center">
+					<th scope="col" class="lead">
+					Project
+					</th>
+					<th class="lead">Task</th>
+					<th class="day-header">MON
+					</th>
+					<th class="day-header">TUE
+					</th>
+					<th class="day-header">WED
+					</th>
+					<th class="day-header">THU
+					</th>
+					<th class="day-header">FRI
+					</th>
+					<th class="day-header">SAT
+					</th>
+					<th class="day-header">SUN
+					</th>
+					<th class="day-header blue">
+						<span class="glyphicon glyphicon-time"></span>
+					</th>
+				</tr>
+				
+				<tr class="row-total lead">
+					<td>example project</td>
+					<td>example task</td>
+					<td class="hoursList center">
+						<input type="text" size="4">
+					</td>
+					<td class="hoursList center">
+						<input type="text" size="4">
+					</td>
+					<td class="hoursList center">
+						<input type="text" size="4">
+					</td>
+					<td class="hoursList center">
+						<input type="text" size="4">
+					</td>
+					<td class="hoursList center">
+						<input type="text" size="4">
+					</td>
+					<td class="hoursList center">
+						<input type="text" size="4">
+					</td>
+					<td class="hoursList center">
+						<input type="text" size="4">
+					</td>
+					<td class="hoursList center ovt blue">0
+					</td>
+					<td class="edit center">
+						<button type="button" class="btn btn-default btn-lg">
+							<span class="glyphicon glyphicon-edit green"></span>
+						</button>
+					</td>
+					<td class="delete center">
+						<button type="button" class="btn btn-default btn-lg">
+							<span class="glyphicon glyphicon-trash red"></span>
+						</button>
+					</td>
+				</tr>
+				
+				<tr class="row-total lead">
+					<td>TOTAL
+					</td>
+					<td>
+					</td>
+					<td class="center ng-binding">0
+					</td>
+					<td class="center ng-binding">0
+					</td>
+					<td class="center ng-binding">0
+					</td>
+					<td class="center ng-binding">0
+					</td>
+					<td class="center ng-binding">0
+					</td>
+					<td class="center ng-binding">0
+					</td>
+					<td class="center ng-binding">0
+					</td>
+					<td class="center ng-binding blue">0
+					</td>
+				</tr>
+			</tbody>	
+		</table>
+		
+		<div class="AddLineRow">
+		  <div class="col-md-4">
+			<div class="input-group input-group-lg">
+				<input type="text" class="form-control" placeholder="Project">
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-search"></span>
+					</button>
+				</span>		
+			</div>
+		  </div>
+		  <div class="col-md-4">
+			<div class="input-group input-group-lg">
+				<input type="text" class="form-control" placeholder="Task">
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-search"></span>
+					</button>
+				</span>		
+			</div>
+		  </div>
+
+		  <div class="col-md-2">
+			<button type="button" class="btn btn-submit btn-lg">
+				<span class="glyphicon glyphicon-plus"></span> Add
+			</button>
+		  </div>
+		  <div class ="col-md-3"></div>
+		</div>
+		
+		
+		<div class ="ButtonRow btn-group-lg">
+			<button type="button" class="btn btn-info btn-lg">
+				<span class="glyphicon glyphicon-save"></span> Save
+			</button>
+				<button type="button" class="btn btn-success btn-lg">
+				<span class="glyphicon glyphicon-inbox"></span> Submit
+			</button>
+		</div>
+	</div>
+    
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
