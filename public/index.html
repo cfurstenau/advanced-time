@@ -29,7 +29,6 @@
 		  // create a blank object to hold our form information
 			// $scope will allow this to pass between controller and view
 			$scope.formData = {};
-			$scope.signedin = true;
 			
 			//process the form
 			$scope.processForm = function() {
@@ -39,7 +38,7 @@
 			    data    : $.param($scope.formData), //pass in data as strings
 			    headers : { 'Content-Type' : 'application/x-www-form-urlencoded' } //set the headers so angular passing info as form data (not request payload)
 			  }).success(function(data) {
-			      console.log(data);
+			      console.log(data);  
 			      
 			      if(!data.success) {
 			        
@@ -51,11 +50,22 @@
 			      else{
 			        //if succesful, bind success message to message
 			        $scope.authenticated = true;
-			        $scope.signedin = false;
 			      }
 			    });
 			  };
+			  
+			  //open and hide Sat/Sun
+				$scope.satSun = function(){
+					if($scope.showWeekend)
+						$scope.showWeekend = false;
+					else
+						$scope.showWeekend = true;
+				}
+			  
 		};
+		
+		
+		
 	</script>
   </head>
 
@@ -98,7 +108,7 @@
 
     </div> <!-- /container -->
     
-    <div class ="container ng-hide" ng-hide="signedin">
+    <div class ="container" ng-show="authenticated">
 		
 		<div class="topbar">
 		  <div class="col-md-2">
@@ -130,7 +140,7 @@
 		  </div>
 		  
 		  <div class="col-md-2">
-			<button type="button" class="btn btn-info btn-lg">
+			<button type="button" class="btn btn-info btn-lg" ng-click="satSun()">
 				<span class="glyphicon glyphicon-calendar"></span> Sat/Sun
 			</button>
 		  </div>
@@ -153,9 +163,9 @@
 					</th>
 					<th class="day-header">FRI
 					</th>
-					<th class="day-header">SAT
+					<th class="day-header" ng-hide="showWeekend">SAT
 					</th>
-					<th class="day-header">SUN
+					<th class="day-header" ng-hide="showWeekend">SUN
 					</th>
 					<th class="day-header blue">
 						<span class="glyphicon glyphicon-time"></span>
@@ -181,10 +191,10 @@
 						<input type="text" size="4">
 					</td>
 					<td class="hoursList center">
-						<input type="text" size="4">
+						<input type="text" size="4" ng-hide="showWeekend">
 					</td>
 					<td class="hoursList center">
-						<input type="text" size="4">
+						<input type="text" size="4" ng-hide="showWeekend">
 					</td>
 					<td class="hoursList center ovt blue">0
 					</td>
@@ -205,19 +215,19 @@
 					</td>
 					<td>
 					</td>
-					<td class="center ng-binding">0
+					<td class="Mon center ng-binding">0
 					</td>
-					<td class="center ng-binding">0
+					<td class="Tue center ng-binding">0
 					</td>
-					<td class="center ng-binding">0
+					<td class="Wed center ng-binding">0
 					</td>
-					<td class="center ng-binding">0
+					<td class="Thu center ng-binding">0
 					</td>
-					<td class="center ng-binding">0
+					<td class="Fri center ng-binding">0
 					</td>
-					<td class="center ng-binding">0
+					<td class="Sat center ng-binding" ng-hide="showWeekend">0
 					</td>
-					<td class="center ng-binding">0
+					<td class="Sun center ng-binding" ng-hide="showWeekend">0
 					</td>
 					<td class="center ng-binding blue">0
 					</td>
