@@ -60,9 +60,25 @@
 						$scope.showWeekend = false;
 					else
 						$scope.showWeekend = true;
-				}
-			  
-		};
+				};
+				
+				var d1 = new Date(); //d1 = now
+				$scope.week1 = formatDate(new Date(d1.setDate(d1.getDate() + 7 - d1.getDay()))); // d1 = next Sunday
+				$scope.week2 = formatDate(new Date(d1.setDate(d1.getDate() - 7))); // d1 - 7 = last Sunday
+			  $scope.week3 = formatDate(new Date(d1.setDate(d1.getDate() - 7))); // d1 - 7 = two Sundays ago
+				$scope.week4 = formatDate(new Date(d1.setDate(d1.getDate() - 7))); // d1 - 7 = three Sundays ago
+			
+		}
+		
+		function formatDate(date){
+			var month = date.getMonth() + 1;
+			var day = date.getDate();
+			var year = date.getFullYear();
+			var formatted = month + "/" + day + "/" + year;
+			return formatted;
+		}
+		
+		
 		
 		
 		
@@ -88,7 +104,7 @@
     <!-- SHOW ERROR/SUCCESS MESSAGES -->
 	
 	  
-    <div class="container">
+    <div class="container container-fluid">
 
       <form class="form-signin ng-hide" ng-submit="processForm()" ng-hide="authenticated">
         <h2 class="form-signin-heading">LOG IN</h2>
@@ -108,7 +124,7 @@
 
     </div> <!-- /container -->
     
-    <div class ="container" ng-show="authenticated">
+    <div class ="container container-fluid" ng-show="authenticated">
 		
 		<div class="topbar">
 		  <div class="col-md-2">
@@ -117,8 +133,10 @@
 					<span class="glyphicon glyphicon-time"></span> New <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu" role="menu">
-				  <li><a href="#">Date</a></li>
-				  <li><a href="#">Date</a></li>
+				  <li><a href="#">{{ week1 }}</a></li>
+				  <li><a href="#">{{ week2 }}</a></li>
+				  <li><a href="#">{{ week3 }}</a></li>
+				  <li><a href="#">{{ week4 }}</a></li>
 				</ul>
 			 </div>
 		  </div>
@@ -196,7 +214,7 @@
 					<td class="hoursList center">
 						<input type="text" size="4" ng-hide="showWeekend">
 					</td>
-					<td class="hoursList center ovt blue">0
+					<td class="hoursList center blue">0
 					</td>
 					<td class="edit center">
 						<button type="button" class="btn btn-default btn-lg">
@@ -237,44 +255,59 @@
 		
 		<div class="AddLineRow">
 		  <div class="col-md-4">
-			<div class="input-group input-group-lg">
-				<input type="text" class="form-control" placeholder="Project">
-				<span class="input-group-btn">
-					<button type="button" class="btn btn-default btn-sm">
-						<span class="glyphicon glyphicon-search"></span>
-					</button>
-				</span>		
-			</div>
+				<div class="input-group input-group-lg">
+					<input type="text" class="form-control" placeholder="Project">
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+								<ul class="dropdown-menu" role="menu">
+						  		<li><a href="#">example</a></li>
+									<li><a href="#">example</a></li>
+								</ul>
+						</span>	
+				</div>
 		  </div>
+		  
 		  <div class="col-md-4">
-			<div class="input-group input-group-lg">
-				<input type="text" class="form-control" placeholder="Task">
-				<span class="input-group-btn">
-					<button type="button" class="btn btn-default btn-sm">
-						<span class="glyphicon glyphicon-search"></span>
-					</button>
-				</span>		
-			</div>
+				<div class="input-group input-group-lg">
+					<input type="text" class="form-control" placeholder="Task">
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+								<ul class="dropdown-menu" role="menu">
+						  		<li><a href="#">example</a></li>
+									<li><a href="#">example</a></li>
+								</ul>
+						</span>	
+				</div>
 		  </div>
 
 		  <div class="col-md-2">
-			<button type="button" class="btn btn-submit btn-lg">
-				<span class="glyphicon glyphicon-plus"></span> Add
-			</button>
+				<button type="button" class="btn btn-submit btn-lg">
+					<span class="glyphicon glyphicon-plus"></span> Add
+				</button>
 		  </div>
-		  <div class ="col-md-3"></div>
+		  
+		  <div class="col-md-3">
+		  	
+		  </div>
+
 		</div>
-		
-		
+
 		<div class ="ButtonRow btn-group-lg">
-			<button type="button" class="btn btn-info btn-lg">
-				<span class="glyphicon glyphicon-save"></span> Save
-			</button>
+				<button type="button" class="btn btn-info btn-lg">
+					<span class="glyphicon glyphicon-save"></span> Save
+				</button>
 				<button type="button" class="btn btn-success btn-lg">
-				<span class="glyphicon glyphicon-inbox"></span> Submit
-			</button>
+					<span class="glyphicon glyphicon-inbox"></span> Submit
+				</button>
 		</div>
+
 	</div>
+	
+	
     
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
