@@ -17,6 +17,13 @@ module.exports = function(app, passport) {
 			}
 		})(req, res); //the (req, res) here passes them to passport
 	});
+	
+	//handler for timecard
+	app.post('/timecard', isLoggedIn(req,res,next), function(req, res) {
+		console.log(req.body);
+	});
+	
+
 
 
 
