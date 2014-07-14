@@ -29,6 +29,7 @@
 		  // create a blank object to hold our form information
 			// $scope will allow this to pass between controller and view
 			$scope.formData = {};
+			$scope.reqData = {};
 			
 			//process the form
 			$scope.processForm = function() {
@@ -56,12 +57,15 @@
 			  
 			  
 			  //Add a click handler for the dates in Timecards. When you click on a date it should send a 
-			  //POST to "/timecard" with the username and the date that was clicked: {user: "user", date: "7/13/2014"}
-			$scope.selectDate = function() {
-			  $http({
+			  //POST to "/timecard" with the username and the date that was clicked: {user: "user", date: "7/13/2014"}			  
+			  $scope.getTimecard = function(data){ 
+    			$scope.reqData.date = date;
+    			$scope.reqData.user = $scope.formData.username;
+    			
+    			$http({
 			    method  : 'POST',
 			    url     : '/timecard',
-			    data    : $.param($scope.formData), //pass in data as strings
+			    data    : $.param($scope.reqData), //pass in data as strings
 			    headers : { 'Content-Type' : 'application/x-www-form-urlencoded' } //set the headers so angular passing info as form data (not request payload)
 			  }).success(function(data) {
 			      console.log(data);  
@@ -75,10 +79,11 @@
 			      }
 			      else{
 			        //if succesful, bind success message to message
-			        
+			        console.log("Sucess");
 			      }
 			    });
-			  };
+			};
+
 			  
 			  
 			  //open and hide Sat/Sun
@@ -168,11 +173,14 @@
 					<span class="glyphicon glyphicon-time"></span> Timecard <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu" role="menu">
-				  <li><a href="#">{{ week1 }}</a></li>
-				  <li><a href="#">{{ week2 }}</a></li>
-				  <li><a href="#">{{ week3 }}</a></li>
-				  <li><a href="#">{{ week4 }}</a></li>
+				  <li><a href='#' ng-click="getTimecard(week1)">{{ week1 }}</a></li>
+				  <li><a href='#' ng-click="getTimecard(week2)">{{ week2 }}</a></li>
+				  <li><a href='#' ng-click="getTimecard(week3)">{{ week3 }}</a></li>
+				  <li><a href='#' ng-click="getTimecard(week4)">{{ week4 }}</a></li>
 				</ul>
+				<select name="date" ng-model="data">
+					<option ng-click="getTimecard(week1)">{{ week1 }}</option>
+				</select>
 			 </div>
 		  </div>
 
