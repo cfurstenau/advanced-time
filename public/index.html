@@ -59,7 +59,7 @@
 			  //Add a click handler for the dates in Timecards. When you click on a date it should send a 
 			  //POST to "/timecard" with the username and the date that was clicked: {user: "user", date: "7/13/2014"}			  
 			  $scope.getTimecard = function(data){ 
-    			$scope.reqData.date = date;
+    			$scope.reqData.date = data;
     			$scope.reqData.user = $scope.formData.username;
     			
     			$http({
@@ -79,7 +79,7 @@
 			      }
 			      else{
 			        //if succesful, bind success message to message
-			        console.log("Sucess");
+			        alert("Sucess");
 			      }
 			    });
 			};
@@ -178,7 +178,7 @@
 				  <li><a href='#' ng-click="getTimecard(week3)">{{ week3 }}</a></li>
 				  <li><a href='#' ng-click="getTimecard(week4)">{{ week4 }}</a></li>
 				</ul>
-				<select name="date" ng-model="data">
+				<select name="data" ng-model="data">
 					<option ng-click="getTimecard(week1)">{{ week1 }}</option>
 				</select>
 			 </div>
