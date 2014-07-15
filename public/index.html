@@ -58,8 +58,8 @@
 			  
 			  //Add a click handler for the dates in Timecards. When you click on a date it should send a 
 			  //POST to "/timecard" with the username and the date that was clicked: {user: "user", date: "7/13/2014"}			  
-			  $scope.getTimecard = function(data){ 
-    			$scope.reqData.date = data;
+			  $scope.getTimecard = function(date){ 
+    			$scope.reqData.date = date;
     			$scope.reqData.user = $scope.formData.username;
     			
     			$http({
@@ -70,17 +70,8 @@
 			  }).success(function(data) {
 			      console.log(data);  
 			      
-			      if(!data.success) {
-			        
-			        //reorganize so there is just $scope.loginError
-			        //will require changes here as well as html below
-			        $scope.message = "Invalid Timecard";
-			      
-			      }
-			      else{
-			        //if succesful, bind success message to message
 			        alert("Sucess");
-			      }
+			     
 			    });
 			};
 

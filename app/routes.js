@@ -19,7 +19,7 @@ module.exports = function(app, passport) {
 	});
 	
 	//handler for timecard
-	app.post('/timecard', isLoggedIn(req,res,next), function(req, res) {
+	app.post('/timecard',isLoggedIn, function(req, res) {
 		console.log(req.body);
 	});
 	
@@ -45,7 +45,7 @@ module.exports = function(app, passport) {
 function isLoggedIn(req, res, next) {
 
 	// if user is authenticated in the session, carry on 
-	if (req.isAuthenticated())
+	if (req.user)
 		return next();
 
 	// if they aren't redirect them to the home page

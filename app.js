@@ -11,7 +11,7 @@ var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
-
+var MongoStore = require('connect-mongo')(session);
 var configDB = require('./config/database.js');
 
 // configuration ===============================================================
@@ -25,7 +25,22 @@ app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser()); // get information from html forms
 
 // required for passport
-app.use(session({ secret: 'ja8j42haf67ajw9dajkwa8a82hj4f6a2h4h2k8' })); // session secret
+app.use(session({cookie : { maxAge: 3600000} , store : new MongoStore(
+            {
+            	db: "test",
+                host: "localhost",
+                port: 27017,
+                mongoose_connection: mongoose.connections[0]
+            },
+            function(error) {
+                if(error) {
+                    return console.error('Failed connecting mongostore for storing session data. %s', error);
+                }
+                return console.log('Connected mongostore for storing session data');
+            }
+         ), secret: 'ja8j42haf67ajw9dajkwa8a82hj4f6a2h4h2k8' })); // session secret
+        
+        
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 
