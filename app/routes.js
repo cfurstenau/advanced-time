@@ -19,8 +19,11 @@ module.exports = function(app, passport) {
 	});
 	
 	//handler for timecard
-	app.post('/timecard',isLoggedIn, function(req, res) {
-		console.log(req.body);
+	app.post('/timecard', passport.authenticate('local-login'), function(req, res) {
+		    // If this function gets called, authentication was successful.
+    		// `req.user` contains the authenticated user.
+    		console.log("Success");
+
 	});
 	
 
@@ -30,7 +33,7 @@ module.exports = function(app, passport) {
 	// =====================================
 	// LOGOUT ==============================
 	// =====================================
-	app.get('/logout', function(req, res) {
+	app.get('/logout', function(req, res, next) {
 		req.logout();
 		res.redirect('/');
 	});
@@ -44,10 +47,11 @@ module.exports = function(app, passport) {
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
 
-	// if user is authenticated in the session, carry on 
-	if (req.user)
+	// CHECK THE USER STORED IN SESSION FOR A CUSTOM VARIABLE
+	// you can do this however you want with whatever variables you set up
+	if (req.isAuthenticated())
 		return next();
 
-	// if they aren't redirect them to the home page
+	// IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
 	res.redirect('/');
 }
