@@ -9,7 +9,7 @@ module.exports = function(app, passport) {
 	//handler for the login form
 	app.post('/login', function(req, res) {
 		console.log(req.body);
-		passport.authenticate('local-login', function(err, user){
+		passport.authenticate('ldap', function(err, user){
 			if (!user) {
 				res.send({success: false});
 			} else {
