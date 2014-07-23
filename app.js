@@ -14,7 +14,6 @@ var session      = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var configDB = require('./config/database.js');
 var ldap = require('passport-ldapauth');
-var connect = require('connect');
 
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
@@ -25,7 +24,7 @@ require('./config/passport')(passport); // pass passport for configuration
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser()); // get information from html forms
-app.use(connect);
+
 
 // required for passport
 app.use(session({cookie : { maxAge: 3600000} , store : new MongoStore(
@@ -52,6 +51,7 @@ app.use(express.static(__dirname + '/public'));
 
 // routes ======================================================================
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+
 
 
 var server = app.listen(port, function() {

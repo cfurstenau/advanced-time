@@ -2,7 +2,6 @@
 
 // load all the things we need
 var LocalStrategy   = require('passport-local').Strategy;
-var LDAPStrategy	= require('passport-ldapauth').Strategy;
 
 // load up the user model
 var User       		= require('../app/models/user');
@@ -28,37 +27,7 @@ module.exports = function(passport) {
         });
     });
 
-//LDAP =========================================================================
-passport.use('ldap', new LDAPStrategy({
-    server: {
-      url: '', // pass in ldap.js url
-      usernameField : 'username',
-      passwordField : 'password',
-      passReqToCallback : true // allows us to pass back the entire request to the callback
-    }
-  },
-  function(req, username, password, done) { // callback with username and password from our form
 
-		// find a user whose username is the same as the forms username
-		// we are checking to see if the user trying to login already exists
-        User.findOne({ 'local.username' :  username }, function(err, user) {
-            // if there are any errors, return the error before anything else
-            if (err)
-                return done(err);
-
-            // if no user is found, return the message
-            if (!user)
-                return done(null, false); 
-
-			// if the user is found but the password is wrong
-            if (!user.validPassword(password))
-                return done(null, false); 
-
-            // all is well, return successful user
-            return done(null, user);
-
-  });
-}));
 
 
  // =========================================================================
