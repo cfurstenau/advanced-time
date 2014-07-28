@@ -13,7 +13,7 @@ module.exports = function(app, passport) {
 			if (!user) {
 				res.send({success: false});
 			} else {
-				res.send({success: true, user: user.local.username});
+				res.send({success: true, user: user.employeeID});
 			}
 			
 			// make passportjs setup the user object, serialize the user, ...

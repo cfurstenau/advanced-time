@@ -9,6 +9,8 @@ var userLDAP = require('./../config/LDAP');
 // load up the user model
 var User       		= require('../app/models/user');
 
+
+
 // expose this function to our app using module.exports
 module.exports = function(passport) {
 
@@ -17,11 +19,11 @@ module.exports = function(passport) {
     // =========================================================================
     // required for persistent login sessions
     // passport needs ability to serialize and unserialize users out of session
-
+	
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
     	console.log(user);
-        done(null, user.objectGUID);
+        done(null, user.id);
     });
 
     // used to deserialize the user
@@ -38,38 +40,8 @@ passport.use('ldap', new LDAPStrategy({
       adminDn: userLDAP.adminDn,
       adminPassword: userLDAP.adminPassword, 
       searchBase: userLDAP.searchBase,
-	  searchFilter: userLDAP.searchFilter},
-	  
-      usernameField : 'username',
-      passwordField : 'password',
-      passReqToCallback : true // allows us to pass back the entire request to the callback    
-    
-  },
-  function(req, username, password, done) { // callback with username and password from our form
-// find a user whose username is the same as the forms username
-// we are checking to see if the user trying to login already exists
-        client.search('OU=PTG Users,DC=ptg-domain,DC=com', opts, function (err, search) {
-    	search.on('searchEntry', function (entry) {
-      	var user = entry.object;
-     	console.log(user.objectGUID);
-     	
-     	 // if there are any errors, return the error before anything else
-         if (err)
-         	return done(err);
-
-         // if no user is found, return the message
-         if (!user)
-         	return done(null, false);
-
-		// if the user is found but the password is wrong
-       	if (!user.validPassword(password))
-        	return done(null, false);
-
-        // all is well, return successful user
-            return done(null, user);
-   		 });
- 	 });
- }));
+	  searchFilter: userLDAP.searchFilter}  
+ 	 }));
  	   
 
  // =========================================================================
@@ -106,8 +78,8 @@ passport.use('ldap', new LDAPStrategy({
         });
 
     }));
-    
-	};
+        
+};
 
 
 
