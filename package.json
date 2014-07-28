@@ -15,6 +15,7 @@
     "method-override": "2.0.2",
     "express-session": "1.6.1",	
     "connect-mongo" : "0.4.1",
-    "passport-ldapauth": "0.0.1"	
+    "passport-ldapauth": "0.2.0",	
+    "ldapjs":"0.7.1"
   }
 }

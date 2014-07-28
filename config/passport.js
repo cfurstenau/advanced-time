@@ -2,6 +2,9 @@
 
 // load all the things we need
 var LocalStrategy   = require('passport-local').Strategy;
+var LDAPStrategy	= require('passport-ldapauth').Strategy;
+var userLDAP = require('./../config/LDAP');
+
 
 // load up the user model
 var User       		= require('../app/models/user');
@@ -17,7 +20,8 @@ module.exports = function(passport) {
 
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
-        done(null, user.id);
+    	console.log(user);
+        done(null, user.objectGUID);
     });
 
     // used to deserialize the user
@@ -27,8 +31,46 @@ module.exports = function(passport) {
         });
     });
 
+//LDAP =========================================================================
+passport.use('ldap', new LDAPStrategy({
+    server: {
+      url: userLDAP.url,
+      adminDn: userLDAP.adminDn,
+      adminPassword: userLDAP.adminPassword, 
+      searchBase: userLDAP.searchBase,
+	  searchFilter: userLDAP.searchFilter},
+	  
+      usernameField : 'username',
+      passwordField : 'password',
+      passReqToCallback : true // allows us to pass back the entire request to the callback    
+    
+  },
+  function(req, username, password, done) { // callback with username and password from our form
+// find a user whose username is the same as the forms username
+// we are checking to see if the user trying to login already exists
+        client.search('OU=PTG Users,DC=ptg-domain,DC=com', opts, function (err, search) {
+    	search.on('searchEntry', function (entry) {
+      	var user = entry.object;
+     	console.log(user.objectGUID);
+     	
+     	 // if there are any errors, return the error before anything else
+         if (err)
+         	return done(err);
 
+         // if no user is found, return the message
+         if (!user)
+         	return done(null, false);
 
+		// if the user is found but the password is wrong
+       	if (!user.validPassword(password))
+        	return done(null, false);
+
+        // all is well, return successful user
+            return done(null, user);
+   		 });
+ 	 });
+ }));
+ 	   
 
  // =========================================================================
     // LOCAL LOGIN =============================================================

@@ -97,7 +97,7 @@
 				var d1 = new Date(); //d1 = now
 				$scope.week1 = formatDate(new Date(d1.setDate(d1.getDate() + 7 - d1.getDay()))); // d1 = next Sunday
 				$scope.week2 = formatDate(new Date(d1.setDate(d1.getDate() - 7))); // d1 - 7 = last Sunday
-			  $scope.week3 = formatDate(new Date(d1.setDate(d1.getDate() - 7))); // d1 - 7 = two Sundays ago
+			    $scope.week3 = formatDate(new Date(d1.setDate(d1.getDate() - 7))); // d1 - 7 = two Sundays ago
 				$scope.week4 = formatDate(new Date(d1.setDate(d1.getDate() - 7))); // d1 - 7 = three Sundays ago
 			
 		}
