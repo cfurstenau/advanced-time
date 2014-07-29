@@ -1,2 +1,4 @@
 # ignoring dependency directory
 node_modules
+config/sql.js
+config/ldap.js

@@ -15,7 +15,7 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 	<link href="includes/style.css" rel="stylesheet" media="screen">
-	
+
 	<!-- Load ANGULAR -->
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
   <script>
@@ -25,12 +25,12 @@
 
 		// create angular controller and pass in $scope and $http
 		function formController($scope, $http) {
-		  
+
 		  // create a blank object to hold our form information
 			// $scope will allow this to pass between controller and view
 			$scope.formData = {};
 			$scope.reqData = {};
-			
+
 			//process the form
 			$scope.processForm = function() {
 			  $http({
@@ -39,29 +39,36 @@
 			    data    : $.param($scope.formData), //pass in data as strings
 			    headers : { 'Content-Type' : 'application/x-www-form-urlencoded' } //set the headers so angular passing info as form data (not request payload)
 			  }).success(function(data) {
-			      console.log(data);  
-			      
+			      console.log(data);
+
 			      if(!data.success) {
-			        
+
 			        //reorganize so there is just $scope.loginError
 			        //will require changes here as well as html below
 			        $scope.message = "Login failed";
-			      
+
 			      }
 			      else{
 			        //if succesful, bind success message to message
 			        $scope.authenticated = true;
+              $scope.reqData.user = data.userId;
 			      }
-			    });
+			    }).error(function(data, status){
+            if (status == 401) {
+              $scope.message = "Login failed";
+            }
+            if (status == 500) {
+              $scope.message = "Internal error";
+            }
+          });
 			  };
-			  
-			  
-			  //Add a click handler for the dates in Timecards. When you click on a date it should send a 
-			  //POST to "/timecard" with the username and the date that was clicked: {user: "user", date: "7/13/2014"}			  
-			  $scope.getTimecard = function(date){ 
+
+
+			  //Add a click handler for the dates in Timecards. When you click on a date it should send a
+			  //POST to "/timecard" with the username and the date that was clicked: {user: "user", date: "7/13/2014"}
+			  $scope.getTimecard = function(date){
     			$scope.reqData.date = date;
-    			$scope.reqData.user = $scope.formData.username;
-    			
+
     			$http({
 			    method  : 'POST',
 			    url     : '/timecard',
@@ -69,15 +76,15 @@
 			    withCredentials: true, //cookie
 			    headers : { 'Content-Type' : 'application/x-www-form-urlencoded' } //set the headers so angular passing info as form data (not request payload)
 			  }).success(function(data) {
-			      console.log(data);  
-			      
+			      console.log(data);
+
 			        alert("Sucess");
-			     
+
 			    });
 			};
 
-			  
-			  
+
+
 			  //open and hide Sat/Sun
 				$scope.satSun = function(){
 					if($scope.showWeekend)
@@ -85,7 +92,7 @@
 					else
 						$scope.showWeekend = true;
 				};
-				
+
 				//open Overtime inputs
 				$scope.OVT = function(){
 					if($scope.showOVT)
@@ -93,15 +100,15 @@
 					else
 						$scope.showOVT = true;
 				};
-				
+
 				var d1 = new Date(); //d1 = now
 				$scope.week1 = formatDate(new Date(d1.setDate(d1.getDate() + 7 - d1.getDay()))); // d1 = next Sunday
 				$scope.week2 = formatDate(new Date(d1.setDate(d1.getDate() - 7))); // d1 - 7 = last Sunday
 			    $scope.week3 = formatDate(new Date(d1.setDate(d1.getDate() - 7))); // d1 - 7 = two Sundays ago
 				$scope.week4 = formatDate(new Date(d1.setDate(d1.getDate() - 7))); // d1 - 7 = three Sundays ago
-			
+
 		}
-		
+
 		function formatDate(date){
 			var month = date.getMonth() + 1;
 			var day = date.getDate();
@@ -109,11 +116,11 @@
 			var formatted = month + "/" + day + "/" + year;
 			return formatted;
 		}
-		
-		
-		
-		
-		
+
+
+
+
+
 	</script>
   </head>
 
@@ -131,33 +138,33 @@
           </div>
 
 	</nav>
-  
-  
+
+
     <!-- SHOW ERROR/SUCCESS MESSAGES -->
-	
-	  
+
+
     <div class="container container-fluid">
 
       <form class="form-signin ng-hide" ng-submit="processForm()" ng-hide="authenticated">
         <h2 class="form-signin-heading">LOG IN</h2>
-        
+
         <div id="username-group" class="form-group" ng-class="{ 'has-error' : message }">
         <span class="help-block" ng-show="message">{{ message }}</span>
         <input name="username" type="username" class="form-control" placeholder="Username" required autofocus/ ng-model="formData.username">
         </div>
 
         <div id="password-group" class="form-group" ng-class="{ 'has-error' : message }">
-        <input name="password" type="password" class="form-control" placeholder="Password" required ng-model="formData.password"> 
+        <input name="password" type="password" class="form-control" placeholder="Password" required ng-model="formData.password">
         </div>
-        
+
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
-      
+
 
     </div> <!-- /container -->
-    
+
     <div class ="container container-fluid" ng-show="authenticated">
-		
+
 		<div class="topbar">
 		  <div class="col-md-3">
 			<div class="btn-group btn-group-lg">
@@ -178,21 +185,21 @@
 				<span class="glyphicon glyphicon-remove-circle"></span> Clear Hrs
 			</button>
 		  </div>
-		  
+
 		  <div class="col-md-2">
 			<button type="button" class="btn btn-info btn-lg" ng-click="satSun()">
 				<span class="glyphicon glyphicon-calendar"></span> Sat/Sun
 			</button>
 		  </div>
-		  
+
 		  <div class="col-md-2">
 			<button type="button" class="btn btn-primary btn-lg" ng-click="OVT()">
 				<span class="glyphicon glyphicon-time"></span> OVT
 			</button>
 		  </div>
-		  
+
 		</div>
-		
+
 		<table class="table table-striped table-condensed">
 			<tbody>
 				<tr class="center">
@@ -218,7 +225,7 @@
 						<span class="glyphicon glyphicon-time"></span>
 					</th>
 				</tr>
-				
+
 				<tr class="row-total lead">
 					<td>example project</td>
 					<td>example task</td>
@@ -258,7 +265,7 @@
 						</button>
 					</td>
 				</tr>
-				
+
 				<tr class="row-total lead">
 					<td>TOTAL
 					</td>
@@ -281,9 +288,9 @@
 					<td class="center ng-binding blue">0
 					</td>
 				</tr>
-			</tbody>	
+			</tbody>
 		</table>
-		
+
 		<div class="AddLineRow">
 		  <div class="col-md-4">
 				<div class="input-group input-group-lg">
@@ -296,10 +303,10 @@
 						  		<li><a href="#">example</a></li>
 									<li><a href="#">example</a></li>
 								</ul>
-						</span>	
+						</span>
 				</div>
 		  </div>
-		  
+
 		  <div class="col-md-4">
 				<div class="input-group input-group-lg">
 					<input type="text" class="form-control" placeholder="Task">
@@ -311,7 +318,7 @@
 						  		<li><a href="#">example</a></li>
 									<li><a href="#">example</a></li>
 								</ul>
-						</span>	
+						</span>
 				</div>
 		  </div>
 
@@ -320,9 +327,9 @@
 					<span class="glyphicon glyphicon-plus"></span> Add
 				</button>
 		  </div>
-		  
+
 		  <div class="col-md-3">
-		  	
+
 		  </div>
 
 		</div>
@@ -337,9 +344,9 @@
 		</div>
 
 	</div>
-	
-	
-    
+
+
+
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
