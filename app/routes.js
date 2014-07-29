@@ -1,11 +1,12 @@
 // app/routes.js
+var dynamics = require('./models/dynamics.js');
 module.exports = function(app, passport) {
 
 	// =====================================
 	// LOGIN ===============================
 	// =====================================
 	// show the login form
-	
+
 	//handler for the login form
 	app.post('/login', function(req, res, next) {
 		console.log(req.body);
@@ -14,23 +15,24 @@ module.exports = function(app, passport) {
 				res.send({success: false});
 			} else {
 				res.send({success: true, user: user.local.username});
+				dynamics.testQuery();
 			}
-			
+
 			// make passportjs setup the user object, serialize the user, ...
             req.login(user, {}, function(err) {
                 if (err) { return next(err) };
             });
 
-			
+
 		})(req, res, next); //the (req, res) here passes them to passport
 		return;
 	});
-	
+
 	//handler for timecard
 	app.post('/timecard',isLoggedIn, function(req, res) {
 		console.log(req.body);
 	});
-	
+
 
 
 
@@ -52,7 +54,7 @@ module.exports = function(app, passport) {
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
 
-	// if user is authenticated in the session, carry on 
+	// if user is authenticated in the session, carry on
 	if (req.user)
 		return next();
 
