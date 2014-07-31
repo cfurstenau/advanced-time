@@ -4,23 +4,17 @@ module.exports = function(app, passport) {
 	// =====================================
 	// LOGIN ===============================
 	// =====================================
-	// show the login form
-
-	//handler for the login form
 	app.post('/login', passport.authenticate('ldap', {session:true}), function(req, res, next) {
-		console.log(req.body);
 		res.send({success: true, userId: req.user.employeeID});
 
 	});
 
-	//handler for timecard
+	// =====================================
+	// TIMECARD ============================
+	// =====================================
 	app.post('/timecard',isLoggedIn, function(req, res) {
-		console.log(req.body);
+		res.send({success:true});
 	});
-
-
-
-
 
 	// =====================================
 	// LOGOUT ==============================
@@ -32,13 +26,8 @@ module.exports = function(app, passport) {
 
 };
 
-
-
-
-
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
-	console.log(req);
 	// if user is authenticated in the session, carry on
 	if (req.user)
 		return next();

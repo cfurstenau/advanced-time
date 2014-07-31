@@ -5,10 +5,6 @@ var LocalStrategy   = require('passport-local').Strategy;
 var LDAPStrategy	= require('passport-ldapauth').Strategy;
 var userLDAP = require('./../config/LDAP');
 
-
-
-
-
 // expose this function to our app using module.exports
 module.exports = function(passport) {
 
@@ -20,7 +16,6 @@ module.exports = function(passport) {
 
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
-    	console.log(user);
         done(null, user.dn);
     });
 
@@ -29,8 +24,8 @@ module.exports = function(passport) {
         done(null, id);
     });
 
-//LDAP =========================================================================
-passport.use('ldap', new LDAPStrategy({
+	//LDAP =========================================================================
+	passport.use('ldap', new LDAPStrategy({
     server: {
       url: userLDAP.url,
       adminDn: userLDAP.adminDn,
@@ -40,12 +35,9 @@ passport.use('ldap', new LDAPStrategy({
  	 }));
 
 
- // =========================================================================
+ 	// =========================================================================
     // LOCAL LOGIN =============================================================
     // =========================================================================
-	// we are using named strategies since we have one for login and one for signup
-	// by default, if there was no name, it would just be called 'local'
-
     passport.use('local-login', new LocalStrategy({
         // by default, local strategy uses username and password, we will override with email
         usernameField : 'username',

@@ -39,9 +39,7 @@
 			    data    : $.param($scope.formData), //pass in data as strings
 			    headers : { 'Content-Type' : 'application/x-www-form-urlencoded' } //set the headers so angular passing info as form data (not request payload)
 			  }).success(function(data) {
-			      console.log(data);
-
-			      if(!data.success) {
+		      	if(!data.success) {
 
 			        //reorganize so there is just $scope.loginError
 			        //will require changes here as well as html below
@@ -51,7 +49,7 @@
 			      else{
 			        //if succesful, bind success message to message
 			        $scope.authenticated = true;
-              $scope.reqData.user = data.userId;
+              		$scope.reqData.user = data.userId;
 			      }
 			    }).error(function(data, status){
             if (status == 401) {
@@ -76,10 +74,7 @@
 			    withCredentials: true, //cookie
 			    headers : { 'Content-Type' : 'application/x-www-form-urlencoded' } //set the headers so angular passing info as form data (not request payload)
 			  }).success(function(data) {
-			      console.log(data);
-
-			        alert("Sucess");
-
+			      alert("Sucess");
 			    });
 			};
 
@@ -100,14 +95,36 @@
 					else
 						$scope.showOVT = true;
 				};
+				
+				$scope.taskDisabled = true; //task is not ready till a project is selected
+				$scope.addDisabled = true; //add is not ready till a project and task are selected
+				
+				//Project Bar
+				$scope.project = "Select a Project";
+				$scope.assignProject = function(selectedProject){
+    			$scope.project = selectedProject;
+    			$scope.taskDisabled = false;
+				}; 
+				
+				//Task Bar
+				$scope.task = "Select a Task";
+				$scope.assignTask = function(selectedTask){
+    			$scope.task = selectedTask;
+    			$scope.addDisabled = false;
+				}; 
+	
 
 				var d1 = new Date(); //d1 = now
 				$scope.week1 = formatDate(new Date(d1.setDate(d1.getDate() + 7 - d1.getDay()))); // d1 = next Sunday
 				$scope.week2 = formatDate(new Date(d1.setDate(d1.getDate() - 7))); // d1 - 7 = last Sunday
 			    $scope.week3 = formatDate(new Date(d1.setDate(d1.getDate() - 7))); // d1 - 7 = two Sundays ago
 				$scope.week4 = formatDate(new Date(d1.setDate(d1.getDate() - 7))); // d1 - 7 = three Sundays ago
+				
+				$scope.projects = ["example1","example2","example3"];
+				$scope.tasks = ["task1","task2","task3"];
 
-		}
+
+		} 
 
 		function formatDate(date){
 			var month = date.getMonth() + 1;
@@ -116,7 +133,6 @@
 			var formatted = month + "/" + day + "/" + year;
 			return formatted;
 		}
-
 
 
 
@@ -165,42 +181,39 @@
 
     <div class ="container container-fluid" ng-show="authenticated">
 
-		<div class="topbar">
-		  <div class="col-md-3">
+		<div class="topbar center">
+		  
 			<div class="btn-group btn-group-lg">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					<span class="glyphicon glyphicon-time"></span> Timecard <span class="caret"></span>
+					<span class="glyphicon glyphicon-time"></span> Payperiod <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu" role="menu">
-				  <li><a href='#' ng-click="getTimecard(week1)">{{ week1 }}</a></li>
+				  <li><a href='#' ng-click="getTimecard(week1)">{{ week1 }} - {{ week3 }}</a></li>
 				  <li><a href='#' ng-click="getTimecard(week2)">{{ week2 }}</a></li>
 				  <li><a href='#' ng-click="getTimecard(week3)">{{ week3 }}</a></li>
 				  <li><a href='#' ng-click="getTimecard(week4)">{{ week4 }}</a></li>
 				</ul>
 			 </div>
-		  </div>
+		  
 
-		  <div class="col-md-2">
-			<button type="button" class="btn btn-warning btn-lg">
-				<span class="glyphicon glyphicon-remove-circle"></span> Clear Hrs
-			</button>
-		  </div>
-
-		  <div class="col-md-2">
+		 
 			<button type="button" class="btn btn-info btn-lg" ng-click="satSun()">
 				<span class="glyphicon glyphicon-calendar"></span> Sat/Sun
 			</button>
-		  </div>
+		  
 
-		  <div class="col-md-2">
+		  
 			<button type="button" class="btn btn-primary btn-lg" ng-click="OVT()">
 				<span class="glyphicon glyphicon-time"></span> OVT
 			</button>
-		  </div>
+		  
 
 		</div>
 
-		<table class="table table-striped table-condensed">
+	<table class="table table-striped table-condensed center">
+			<thead>
+				<th align="center">WEEK 1</th> 
+			</thead>
 			<tbody>
 				<tr class="center">
 					<th scope="col" class="lead">
@@ -224,6 +237,9 @@
 					<th class="day-header blue">
 						<span class="glyphicon glyphicon-time"></span>
 					</th>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 
 				<tr class="row-total lead">
@@ -259,6 +275,14 @@
 					</td>
 					<td class="Overtime hoursList center blue">0
 					</td>
+					<td class="comment center">
+						<input type="text" size="6" placeholder="Comments" >
+					</td>
+					<td class="clear center">
+						<button type="button" class="btn btn-warning btn-lg">
+							<span class="glyphicon glyphicon-remove-circle yellow"></span>
+						</button>
+					</td>
 					<td class="delete center">
 						<button type="button" class="btn btn-default btn-lg">
 							<span class="glyphicon glyphicon-trash red"></span>
@@ -287,52 +311,52 @@
 					</td>
 					<td class="center ng-binding blue">0
 					</td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 			</tbody>
 		</table>
-
-		<div class="AddLineRow">
-		  <div class="col-md-4">
-				<div class="input-group input-group-lg">
-					<input type="text" class="form-control" placeholder="Project">
-						<span class="input-group-btn">
-							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-								<span class="glyphicon glyphicon-search"></span>
+		
+		<table class="bottomrow table center">
+			<tbody>
+				<tr>
+					<td>
+						<div class="input-group input-group-lg">
+							<span class="form-control">{{ project }}</span>
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+										<span class="caret"></span>
+									</button>
+										<ul class="dropdown-menu" role="menu">
+						  					<li ng-model="selectedProject" ng-repeat="selectedProject in projects" ng-click="assignProject(selectedProject)"><a href="#">{{ selectedProject }}</a></li>
+										</ul>
+								</span>
+						</div>
+					</td>
+					<td>
+						<div class="input-group input-group-lg">
+							<span class="form-control">{{ task }}</span>
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-disabled="taskDisabled">
+										<span class="caret"></span>
+									</button>
+										<ul class="dropdown-menu" role="menu">
+						  					<li ng-model="selectedTask" ng-repeat="selectedTask in tasks" ng-click="assignTask(selectedTask)"><a href="#">{{ selectedTask }}</a></li>
+										</ul>
+								</span>
+						</div>						
+					</td>
+					<td>
+						<div class="col-md-2">
+							<button type="button" class="btn btn-submit btn-lg" ng-disabled="addDisabled">
+								<span class="glyphicon glyphicon-plus"></span> Add
 							</button>
-								<ul class="dropdown-menu" role="menu">
-						  		<li><a href="#">example</a></li>
-									<li><a href="#">example</a></li>
-								</ul>
-						</span>
-				</div>
-		  </div>
-
-		  <div class="col-md-4">
-				<div class="input-group input-group-lg">
-					<input type="text" class="form-control" placeholder="Task">
-						<span class="input-group-btn">
-							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-								<span class="glyphicon glyphicon-search"></span>
-							</button>
-								<ul class="dropdown-menu" role="menu">
-						  		<li><a href="#">example</a></li>
-									<li><a href="#">example</a></li>
-								</ul>
-						</span>
-				</div>
-		  </div>
-
-		  <div class="col-md-2">
-				<button type="button" class="btn btn-submit btn-lg">
-					<span class="glyphicon glyphicon-plus"></span> Add
-				</button>
-		  </div>
-
-		  <div class="col-md-3">
-
-		  </div>
-
-		</div>
+		  				</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 
 		<div class ="ButtonRow btn-group-lg">
 				<button type="button" class="btn btn-info btn-lg">
