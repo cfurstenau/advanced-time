@@ -115,6 +115,18 @@
 				
 				//Add Button
 				$scope.addTimeRow = function(project, task){
+					//Check for repeat project and task
+					var index = -1;
+			          for( var i = 0; i < $scope.timeRowsWeek.length; i++ ) {
+			          	console.log($scope.timeRowsWeek[i].project);
+			          	console.log(project);
+			                if( $scope.timeRowsWeek[i].project === project  && $scope.timeRowsWeek[i].task === task) {
+			                    alert("This Project and Task already exists for this week.");
+			                    return;
+			                    break;
+			                    
+						}
+					}
 					//add Timecard Row to table
 					$scope.timeRowsWeek.push({'project': project, 'task': task});
 					//Reset Project Bar
