@@ -16,6 +16,11 @@ height:50px;
 width:50px;
 margin-right: 170px;
 }
+.center{
+	margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+}
 
 
 .form-signin {
@@ -93,33 +98,14 @@ color: #FFFF66;
 padding-bottom:55px;
 text-align:center;
 }
-
-.topbar .col-md-2 {
-padding-bottom:10px;
-padding-top:10px;
-}
-.topbar .col-md-3{
-	padding-bottom: 10px;
-	padding-top:10px;
+.topbar .btn{
+	margin-left:25px;
+	margin-right:25px;
 }
 
-.topbar .col-md-4 {
-padding-bottom:10px;
-padding-top:10px;
-}
+.bottomrow{
+	background-color:rgb(27,87,158);
 
-.AddLineRow {
-padding-bottom:50px;
-}
-
-.AddLineRow .col-md-4  {
-background-color:rgb(27,87,158);
-padding:15px;
-}
-
-.AddLineRow .col-md-2  {
-background-color:rgb(27,87,158);
-padding:15px;
 }
 .ButtonRow  {
 text-align:center;

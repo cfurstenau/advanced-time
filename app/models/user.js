@@ -6,11 +6,12 @@ var userLDAP = require('./../../config/LDAP');
 
 ldap.Attribute.settings.guid_format = ldap.GUID_FORMAT_B;
 
+// connect to WWTAS LDAP server
 var client = ldap.createClient({
 	url: userLDAP.url
 });
 
-client.bind('CN=images,OU=Restricted GPOS,DC=ptg-domain,DC=com', '4L9ad1ng#PC!', function (err) {
+client.bind(userLDAP.adminDn, userLDAP.adminPassword, function (err) {
 	
 });
 
