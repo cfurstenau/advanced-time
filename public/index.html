@@ -103,15 +103,43 @@
 				$scope.project = "Select a Project";
 				$scope.assignProject = function(selectedProject){
     			$scope.project = selectedProject;
-    			$scope.taskDisabled = false;
+    			$scope.taskDisabled = false; //enable task button
 				}; 
 				
 				//Task Bar
 				$scope.task = "Select a Task";
 				$scope.assignTask = function(selectedTask){
     			$scope.task = selectedTask;
-    			$scope.addDisabled = false;
+    			$scope.addDisabled = false; //enable add button
 				}; 
+				
+				//Add Button
+				$scope.addTimeRow = function(project, task){
+					//add Timecard Row to table
+					$scope.timeRowsWeek.push({'project': project, 'task': task});
+					//Reset Project Bar
+					$scope.project = "Select a Project";
+					$scope.task = "Select a Task";
+					$scope.taskDisabled = true;
+					$scope.addDisabled = true;	
+				};
+				
+				//Remove button
+				$scope.removeWeek = function(project,task){
+					  var index = -1;
+			          for( var i = 0; i < $scope.timeRowsWeek.length; i++ ) {
+			          	console.log($scope.timeRowsWeek[i].project);
+			          	console.log(project);
+			                if( $scope.timeRowsWeek[i].project === project  && $scope.timeRowsWeek[i].task === task) {
+			                    index = i;
+			                    break;
+			                 }
+			          }
+			          if( index === -1 ) {
+			               alert( "Something gone wrong" );
+			          }
+			          $scope.timeRowsWeek.splice( index, 1 );
+				};
 	
 
 				var d1 = new Date(); //d1 = now
@@ -120,6 +148,7 @@
 			    $scope.week3 = formatDate(new Date(d1.setDate(d1.getDate() - 7))); // d1 - 7 = two Sundays ago
 				$scope.week4 = formatDate(new Date(d1.setDate(d1.getDate() - 7))); // d1 - 7 = three Sundays ago
 				
+				$scope.timeRowsWeek = [];
 				$scope.projects = ["example1","example2","example3"];
 				$scope.tasks = ["task1","task2","task3"];
 
@@ -242,9 +271,9 @@
 					<td></td>
 				</tr>
 
-				<tr class="row-total lead">
-					<td>example project</td>
-					<td>example task</td>
+				<tr class="row-total lead" ng-model="rowWeek" ng-repeat="rowWeek in timeRowsWeek">
+					<td>{{ rowWeek.project }}</td>
+					<td>{{ rowWeek.task }}</td>
 					<td class="Mon hoursList center">
 						<input type="text" size="4" placeholder="0.00">
 						<input type="text" size="4" placeholder="OVT" ng-show="showOVT">
@@ -284,7 +313,7 @@
 						</button>
 					</td>
 					<td class="delete center">
-						<button type="button" class="btn btn-default btn-lg">
+						<button type="button" class="btn btn-default btn-lg" ng-click="removeWeek(rowWeek.project,rowWeek.task)">
 							<span class="glyphicon glyphicon-trash red"></span>
 						</button>
 					</td>
@@ -348,11 +377,9 @@
 						</div>						
 					</td>
 					<td>
-						<div class="col-md-2">
-							<button type="button" class="btn btn-submit btn-lg" ng-disabled="addDisabled">
+							<button type="button" class="btn btn-submit btn-lg" ng-disabled="addDisabled" ng-click="addTimeRow(project,task)">
 								<span class="glyphicon glyphicon-plus"></span> Add
 							</button>
-		  				</div>
 					</td>
 				</tr>
 			</tbody>
