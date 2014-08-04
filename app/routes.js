@@ -7,8 +7,11 @@ module.exports = function(app, passport) {
 	// =====================================
 
 	app.post('/login', passport.authenticate('ldap', {session:true}), function(req, res, next) {
-		res.send({success: true, userId: req.user.employeeID});
-		dynamics.testQuery();
+		var now = new Date(2013, 1, 1); //test date
+		var dates = dynamics.payperiodButton(now); 
+		console.log(dates);
+		res.send({success: true, userId: req.user.employeeID, payperiods: dates});
+		
 	});
 
 	// =====================================
@@ -17,6 +20,7 @@ module.exports = function(app, passport) {
 
 	app.post('/timecard',isLoggedIn, function(req, res) {
 		res.send({success:true});
+		dynamics.getTimecard(req.user,req.date);
 	});
 
 	// =====================================

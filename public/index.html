@@ -50,6 +50,7 @@
 			        //if succesful, bind success message to message
 			        $scope.authenticated = true;
               		$scope.reqData.user = data.userId;
+              		$scope.dates = data.payperiods;
 			      }
 			    }).error(function(data, status){
             if (status == 401) {
@@ -228,11 +229,9 @@
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 					<span class="glyphicon glyphicon-time"></span> Payperiod <span class="caret"></span>
 				</button>
-				<ul class="dropdown-menu" role="menu">
-				  <li><a href='#' ng-click="getTimecard(week1)">{{ week1 }} - {{ week3 }}</a></li>
-				  <li><a href='#' ng-click="getTimecard(week2)">{{ week2 }}</a></li>
-				  <li><a href='#' ng-click="getTimecard(week3)">{{ week3 }}</a></li>
-				  <li><a href='#' ng-click="getTimecard(week4)">{{ week4 }}</a></li>
+				<ul class="dropdown-menu" role="menu" ng-model ="payperiod" ng-repeat="payperiod in dates">
+				  <li><a href='#' ng-click="getTimecard(payperiod)">{{ payperiod }}</a></li>
+
 				</ul>
 			 </div>
 		  
