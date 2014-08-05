@@ -8,10 +8,10 @@ module.exports = function(app, passport) {
 
 	app.post('/login', passport.authenticate('ldap', {session:true}), function(req, res, next) {
 		var now = new Date(2013, 1, 1); //test date
-		var dates = dynamics.payperiodButton(now); 
-		console.log(dates);
-		res.send({success: true, userId: req.user.employeeID, payperiods: dates});
-		
+		var employee = req.user.employeeID;
+		//send date, employee and res object to dynamics
+		var dates = dynamics.payperiodButton(now, employee, res);
+
 	});
 
 	// =====================================

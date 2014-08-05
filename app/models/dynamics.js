@@ -1,5 +1,6 @@
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
+var TYPES = require('tedious').TYPES;
 var config = require('./../../config/sql.js');
 
 
@@ -25,34 +26,31 @@ module.exports.testQuery = function() {
 
 };
 
-module.exports.payperiodButton= function(currentdate){
-	var TYPES = require('tedious').TYPES;
+module.exports.payperiodButton= function(currentdate, employee, res){
 	var connection = new Connection(config);
+  var payperiods = [];
 	var sql = "select we_date from PJWEEK where we_date >= @currentdate ";
-	
-	
-	var payperiods = [];
-	
+
 	var request = new Request(sql, function(err, rowCount) {
       if (err) {
         console.log(err);
       } else {
+        //query was successful, send response
+        res.send({success: true, userId: employee, payperiods: payperiods});
         console.log(rowCount + ' rows');
       }
   });
-  
   request.addParameter('currentdate',TYPES.SmallDateTime, currentdate);
-  
-   request.on('row', function(columns) {
-      	payperiods.push(columns[0].value);
-			return payperiods;
-      });
-  
-     connection.on('connect', function(err){
-    	console.log(err);   	
+
+  request.on('row', function(columns) {
+    payperiods.push(columns[0].value);
+  });
+
+  connection.on('connect', function(err){
+  	console.log(err);
 		connection.execSql(request);
- 	 });
-	
+ 	});
+
 };
 
 module.exports.getTimecard = function(user, date) {
@@ -67,18 +65,18 @@ module.exports.getTimecard = function(user, date) {
         console.log(rowCount + ' rows');
       }
   });
-  
+
   request.addParameter('user',TYPES.VarChar, user);
   request.addParameter('date',TYPES.SmallDateTime, date);
-  
-  
+
+
   request.on('row', function(columns) {
       columns.forEach(function(column) {
         console.log(column.metadata.colName + " = " + column.value);
       });
   });
-  
-   connection.on('connect', function(err){
+
+  connection.on('connect', function(err){
     console.log(err);
     connection.execSql(request);
   });
