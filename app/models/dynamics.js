@@ -28,22 +28,26 @@ module.exports.testQuery = function() {
 
 module.exports.payperiodButton= function(currentdate, employee, res){
 	var connection = new Connection(config);
-  var payperiods = [];
-	var sql = "select we_date from PJWEEK where we_date >= @currentdate ";
+  	var startWeeks = [];
+  	var endWeeks = [];
+	var sql = "select we_date from PJWEEK where we_date >= @currentdate  ";
 
 	var request = new Request(sql, function(err, rowCount) {
       if (err) {
         console.log(err);
       } else {
         //query was successful, send response
-        res.send({success: true, userId: employee, payperiods: payperiods});
+        res.send({success: true, userId: employee, startWeeks: startWeeks, endWeeks: endWeeks});
         console.log(rowCount + ' rows');
       }
   });
   request.addParameter('currentdate',TYPES.SmallDateTime, currentdate);
-
-  request.on('row', function(columns) {
-    payperiods.push(columns[0].value);
+  	request.on('row', function(columns) {
+  	startDate = new Date(columns[0].value);
+  	startDate.setDate(startDate.getDate() -13);
+  	startWeeks.push(startDate.toLocaleDateString());
+  	endDate = new Date(columns[0].value);
+    endWeeks.push((endDate).toLocaleDateString());
   });
 
   connection.on('connect', function(err){
