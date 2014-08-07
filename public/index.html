@@ -55,9 +55,12 @@
 					for ( var i = 0; i < data.startWeeks.length; i++) {
 						if(i == 4)
 							break;
-						else
+						else{
 							$scope.weeks.push({startWeek: data.startWeeks[i], endWeek: data.endWeeks[i]});
+							
+						}
 					}
+
 
 			      }
 			    }).error(function(data, status){
@@ -83,8 +86,38 @@
 			    withCredentials: true, //cookie
 			    headers : { 'Content-Type' : 'application/x-www-form-urlencoded' } //set the headers so angular passing info as form data (not request payload)
 			  }).success(function(data) {
+			  	  $scope.removeAllWeeks();
+			  	  //populate with SQL data
 			      $scope.payperiod = date;
-			      alert("Sucess");
+			      
+      			//Add dates to table
+      			var Monday = new Date(date);
+      			Monday.setDate(Monday.getDate() - 13);
+				$scope.Monday = Monday.toLocaleDateString();
+				
+				var Tuesday = new Date(date);
+      			Tuesday.setDate(Tuesday.getDate() - 12);
+				$scope.Tuesday = Tuesday.toLocaleDateString();
+				
+				var Wednesday = new Date(date);
+      			Wednesday.setDate(Wednesday.getDate() - 11);
+				$scope.Wednesday = Wednesday.toLocaleDateString();
+				
+				var Thursday = new Date(date);
+      			Thursday.setDate(Thursday.getDate() - 10);
+				$scope.Thursday = Thursday.toLocaleDateString();
+				
+				var Friday = new Date(date);
+      			Friday.setDate(Friday.getDate() - 9);
+				$scope.Friday = Friday.toLocaleDateString();
+				
+				var Saturday = new Date(date);
+      			Saturday.setDate(Saturday.getDate() - 8);
+				$scope.Saturday = Saturday.toLocaleDateString();
+				
+				var Sunday = new Date(date);
+      			Sunday.setDate(Sunday.getDate() - 7);
+				$scope.Sunday = Sunday.toLocaleDateString();
 			    });
 			};
 
@@ -162,6 +195,10 @@
 			          }
 			          $scope.timeRowsWeek.splice( index, 1 );
 				};
+				
+				$scope.removeAllWeeks = function(project,task){
+					$scope.timeRowsWeek = [];
+				};
 
 
 				var d1 = new Date(); //d1 = now
@@ -201,8 +238,8 @@
               <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/"><image src= "includes/wwtas.jpg" width ="220" height="50" align=top></a>
+            <p class="navbar-text" ng-show="authenticated">Signed in as: {{  reqData.user }}</p>
           </div>
-
 	</nav>
 
 
@@ -267,19 +304,19 @@
 					Project
 					</th>
 					<th class="lead">Task</th>
-					<th class="day-header">MON
+					<th class="day-header">MON {{ Monday }}
 					</th>
-					<th class="day-header">TUE
+					<th class="day-header">TUE {{ Tuesday }}
 					</th>
-					<th class="day-header">WED
+					<th class="day-header">WED {{ Wednesday }}
 					</th>
-					<th class="day-header">THU
+					<th class="day-header">THU {{ Thursday }}
 					</th>
-					<th class="day-header">FRI
+					<th class="day-header">FRI {{ Friday }}
 					</th>
-					<th class="day-header" ng-show="showWeekend">SAT
+					<th class="day-header" ng-show="showWeekend">SAT {{ Saturday }}
 					</th>
-					<th class="day-header" ng-show="showWeekend">SUN
+					<th class="day-header" ng-show="showWeekend">SUN {{ Sunday }}
 					</th>
 					<th class="day-header blue">
 						<span class="glyphicon glyphicon-time"></span>
