@@ -31,6 +31,7 @@
 			$scope.formData = {};
 			$scope.reqData = {};
 			$scope.weeks = [];
+      $scope.tasks = [];
 
 			//process the form
 			$scope.processForm = function() {
@@ -51,16 +52,18 @@
 			        //if succesful, bind success message to message
 			        $scope.authenticated = true;
               		$scope.reqData.user = data.userId;
-              		
+
 					for ( var i = 0; i < data.startWeeks.length; i++) {
 						if(i == 4)
 							break;
 						else{
-							$scope.weeks.push({startWeek: data.startWeeks[i], endWeek: data.endWeeks[i]});
-							
+							$scope.weeks.push({startWeek: data.startWeeks[4-i], endWeek: data.endWeeks[4-i]});
+
 						}
 					}
 
+          $scope.projects = data.projects;
+          $scope.availableTasks = data.tasks;
 
 			      }
 			    }).error(function(data, status){
@@ -89,34 +92,33 @@
 			  	  $scope.removeAllWeeks();
 			  	  //populate with SQL data
 			      $scope.payperiod = date;
-			      
+
 	      			//Add dates to table
 	      			var Monday = new Date(date);
-	      			Monday.setDate(Monday.getDate() - 13);
+	      			Monday.setDate(Monday.getDate() - 6);
 					$scope.Monday = Monday.toLocaleDateString();
-					
+
 					var Tuesday = new Date(date);
-	      			Tuesday.setDate(Tuesday.getDate() - 12);
+	      			Tuesday.setDate(Tuesday.getDate() - 5);
 					$scope.Tuesday = Tuesday.toLocaleDateString();
-					
+
 					var Wednesday = new Date(date);
-	      			Wednesday.setDate(Wednesday.getDate() - 11);
+	      			Wednesday.setDate(Wednesday.getDate() - 4);
 					$scope.Wednesday = Wednesday.toLocaleDateString();
-					
+
 					var Thursday = new Date(date);
-	      			Thursday.setDate(Thursday.getDate() - 10);
+	      			Thursday.setDate(Thursday.getDate() - 3);
 					$scope.Thursday = Thursday.toLocaleDateString();
-					
+
 					var Friday = new Date(date);
-	      			Friday.setDate(Friday.getDate() - 9);
+	      			Friday.setDate(Friday.getDate() - 2);
 					$scope.Friday = Friday.toLocaleDateString();
-					
+
 					var Saturday = new Date(date);
-	      			Saturday.setDate(Saturday.getDate() - 8);
+	      			Saturday.setDate(Saturday.getDate() - 1);
 					$scope.Saturday = Saturday.toLocaleDateString();
-					
+
 					var Sunday = new Date(date);
-	      			Sunday.setDate(Sunday.getDate() - 7);
 					$scope.Sunday = Sunday.toLocaleDateString();
 			    });
 			};
@@ -144,48 +146,50 @@
 
 				//Project Bar
 				$scope.project = "Select a Project";
-				$scope.assignProject = function(selectedProject){
-    			$scope.project = selectedProject;
+				$scope.assignProject = function(project, projectDesc){
+    			$scope.project = projectDesc;
+          for (i=0;i<$scope.availableTasks.length;i++){
+            if ($scope.availableTasks[i].proj == project){
+              $scope.tasks.push({index: i, taskDesc: $scope.availableTasks[i].taskDesc});
+            }
+          }
     			$scope.taskDisabled = false; //enable task button
 				};
 
 				//Task Bar
-				$scope.task = "Select a Task";
-				$scope.assignTask = function(selectedTask){
-    			$scope.task = selectedTask;
+				$scope.taskDesc = "Select a Task";
+				$scope.assignTask = function(index, taskDesc){
+          $scope.task = $scope.availableTasks[index];
+    			$scope.taskDesc = taskDesc;
     			$scope.addDisabled = false; //enable add button
 				};
 
 				//Add Button
-				$scope.addTimeRow = function(project, task){
+				$scope.addTimeRow = function(){
 					//Check for repeat project and task
-					var index = -1;
-			          for( var i = 0; i < $scope.timeRowsWeek.length; i++ ) {
-			          	console.log($scope.timeRowsWeek[i].project);
-			          	console.log(project);
-			                if( $scope.timeRowsWeek[i].project === project  && $scope.timeRowsWeek[i].task === task) {
-			                    alert("This Project and Task already exists for this week.");
-			                    return;
-			                    break;
-
+			      for( var i = 0; i < $scope.timeRowsWeek.length; i++ ) {
+			           if($scope.timeRowsWeek[i].task === $scope.task.task) {
+			               alert("This Project and Task already exists for this week.");
+			               return;
+			               break;
 						}
 					}
 					//add Timecard Row to table
-					$scope.timeRowsWeek.push({'project': project, 'task': task});
+					$scope.timeRowsWeek.push($scope.task);
 					//Reset Project Bar
 					$scope.project = "Select a Project";
-					$scope.task = "Select a Task";
+					$scope.taskDesc = "Select a Task";
+          $scope.tasks = [];
+          $scope.task = {};
 					$scope.taskDisabled = true;
 					$scope.addDisabled = true;
 				};
 
 				//Remove button
-				$scope.removeWeek = function(project,task){
+				$scope.removeWeek = function(task){
 					  var index = -1;
 			          for( var i = 0; i < $scope.timeRowsWeek.length; i++ ) {
-			          	console.log($scope.timeRowsWeek[i].project);
-			          	console.log(project);
-			                if( $scope.timeRowsWeek[i].project === project  && $scope.timeRowsWeek[i].task === task) {
+			                if($scope.timeRowsWeek[i].task === task) {
 			                    index = i;
 			                    break;
 			                 }
@@ -195,7 +199,7 @@
 			          }
 			          $scope.timeRowsWeek.splice( index, 1 );
 				};
-				
+
 				$scope.removeAllWeeks = function(project,task){
 					$scope.timeRowsWeek = [];
 				};
@@ -204,11 +208,9 @@
 				var d1 = new Date(); //d1 = now
 				$scope.week1 = formatDate(new Date(d1.setDate(d1.getDate() + 7 - d1.getDay()))); // d1 = next Sunday
 				//$scope.week2 = formatDate(new Date(d1.setDate(d1.getDate() - 7))); // d1 - 7 = last Sunday
-			   
+
 
 				$scope.timeRowsWeek = [];
-				$scope.projects = ["example1","example2","example3"];
-				$scope.tasks = ["task1","task2","task3"];
 
 
 		}
@@ -327,8 +329,8 @@
 				</tr>
 
 				<tr class="row-total lead" ng-model="rowWeek" ng-repeat="rowWeek in timeRowsWeek">
-					<td>{{ rowWeek.project }}</td>
-					<td>{{ rowWeek.task }}</td>
+					<td>{{ rowWeek.projDesc }}</td>
+					<td>{{ rowWeek.taskDesc }}</td>
 					<td class="Mon hoursList center">
 						<input type="text" size="4" placeholder="0.00">
 						<input type="text" size="4" placeholder="OVT" ng-show="showOVT">
@@ -368,7 +370,7 @@
 						</button>
 					</td>
 					<td class="delete center">
-						<button type="button" class="btn btn-default btn-lg" ng-click="removeWeek(rowWeek.project,rowWeek.task)">
+						<button type="button" class="btn btn-default btn-lg" ng-click="removeWeek(rowWeek.task)">
 							<span class="glyphicon glyphicon-trash red"></span>
 						</button>
 					</td>
@@ -413,26 +415,26 @@
 										<span class="caret"></span>
 									</button>
 										<ul class="dropdown-menu" role="menu">
-						  					<li ng-model="selectedProject" ng-repeat="selectedProject in projects" ng-click="assignProject(selectedProject)"><a href="#">{{ selectedProject }}</a></li>
+						  					<li ng-model="selectedProject" ng-repeat="selectedProject in projects" ng-click="assignProject(selectedProject.proj, selectedProject.projDesc)"><a href="#">{{ selectedProject.projDesc }}</a></li>
 										</ul>
 								</span>
 						</div>
 					</td>
 					<td>
 						<div class="input-group input-group-lg">
-							<span class="form-control">{{ task }}</span>
+							<span class="form-control">{{ taskDesc }}</span>
 								<span class="input-group-btn">
 									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-disabled="taskDisabled">
 										<span class="caret"></span>
 									</button>
 										<ul class="dropdown-menu" role="menu">
-						  					<li ng-model="selectedTask" ng-repeat="selectedTask in tasks" ng-click="assignTask(selectedTask)"><a href="#">{{ selectedTask }}</a></li>
+						  					<li ng-model="selectedTask" ng-repeat="selectedTask in tasks" ng-click="assignTask(selectedTask.index, selectedTask.taskDesc)"><a href="#">{{ selectedTask.taskDesc }}</a></li>
 										</ul>
 								</span>
 						</div>
 					</td>
 					<td>
-							<button type="button" class="btn btn-submit btn-lg" ng-disabled="addDisabled" ng-click="addTimeRow(project,task)">
+							<button type="button" class="btn btn-submit btn-lg" ng-disabled="addDisabled" ng-click="addTimeRow()">
 								<span class="glyphicon glyphicon-plus"></span> Add
 							</button>
 					</td>
