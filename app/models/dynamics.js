@@ -42,7 +42,10 @@ module.exports.getTimecard = function(user, date, res) {
   var timecard = [];
 	var connection = new Connection(config);
 	var sql = "select project_desc projDesc, pjt_entity_desc taskDesc, day1_hr1 monHours, day2_hr1 tueHours, "+
-            "day3_hr1 wedHours, day4_hr1 thuHours,day5_hr1 friHours, day6_hr1 satHours, day7_hr1 sunHours, PJLABDET.pjt_entity task, PJLABDET.project proj "+
+            "day3_hr1 wedHours, day4_hr1 thuHours,day5_hr1 friHours, day6_hr1 satHours, day7_hr1 sunHours, "+
+            "day1_hr2 monOT, day2_hr2 tueOT, day3_hr2 wedOT, day4_hr2 thuOT, "+
+            "day5_hr2 friOT, day6_hr2 satOT, day7_hr2 sunOT, "+
+            "PJLABDET.pjt_entity task, PJLABDET.project proj "+
             "from dbo.PJLABHDR "+
             "join dbo.PJLABDET "+
             "on PJLABHDR.docnbr = PJLABDET.docnbr "+

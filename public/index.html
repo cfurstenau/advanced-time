@@ -123,8 +123,18 @@
 
           for (i=0; i<data.timecard.length; i++)
             $scope.timeRowsWeek[i] = data.timecard[i];
-            if (data.timecard[i].satHours != 0 || data.timecard[i].sunHours != 0) {
+
+            var weekendHours = data.timecard[i].satHours + data.timecard[i].sunHours +
+                    data.timecard[i].satOT + data.timecard[i].sunOT;
+            if (weekendHours != 0) {
               $scope.showWeekend = true;
+            }
+
+            var otHours = data.timecard[i].monOT + data.timecard[i].tueOT + data.timecard[i].wedOT +
+                    data.timecard[i].thuOT + data.timecard[i].friOT + data.timecard[i].satOT +
+                    data.timecard[i].sunOT;
+            if (otHours != 0){
+              $scope.showOVT = true;
             }
 			    });
 			};
@@ -334,31 +344,31 @@
 					<td>{{ rowWeek.taskDesc }}</td>
 					<td class="Mon hoursList">
 						<input type="text" size="4" placeholder="0.00" ng-model="rowWeek.monHours">
-						<input type="text" size="4" placeholder="OVT" ng-show="showOVT">
+						<input type="text" size="4" placeholder="OVT" ng-show="showOVT" ng-model="rowWeek.monOT">
 					</td>
 					<td class="Tue hoursList">
 						<input type="text" size="4" placeholder="0.00" ng-model="rowWeek.tueHours">
-						<input type="text" size="4" placeholder="OVT" ng-show="showOVT">
+						<input type="text" size="4" placeholder="OVT" ng-show="showOVT" ng-model="rowWeek.tueOT">
 					</td>
 					<td class="Wed hoursList">
 						<input type="text" size="4" placeholder="0.00" ng-model="rowWeek.wedHours">
-						<input type="text" size="4" placeholder="OVT" ng-show="showOVT">
+						<input type="text" size="4" placeholder="OVT" ng-show="showOVT" ng-model="rowWeek.wedOT">
 					</td>
 					<td class="Thu hoursList">
 						<input type="text" size="4" placeholder="0.00" ng-model="rowWeek.thuHours">
-						<input type="text" size="4" placeholder="OVT" ng-show="showOVT">
+						<input type="text" size="4" placeholder="OVT" ng-show="showOVT" ng-model="rowWeek.thuOT">
 					</td>
 					<td class="Fri hoursList">
 						<input type="text" size="4" placeholder="0.00" ng-model="rowWeek.friHours">
-						<input type="text" size="4" placeholder="OVT" ng-show="showOVT">
+						<input type="text" size="4" placeholder="OVT" ng-show="showOVT" ng-model="rowWeek.friOT">
 					</td>
 					<td class="Sat hoursList" ng-show="showWeekend">
 						<input type="text" size="4" placeholder="0.00" ng-model="rowWeek.satHours">
-						<input type="text" size="4" placeholder="OVT" ng-show="showOVT">
+						<input type="text" size="4" placeholder="OVT" ng-show="showOVT" ng-model="rowWeek.satOT">
 					</td>
 					<td class="Sun hoursList" ng-show="showWeekend">
 						<input type="text" size="4" placeholder="0.00" ng-model="rowWeek.sunHours">
-						<input type="text" label="OVT" size="4" placeholder="OVT" ng-show="showOVT">
+						<input type="text" size="4" placeholder="OVT" ng-show="showOVT" ng-model="rowWeek.sunOT">
 					</td>
 					<td class="Overtime hoursList blue">0
 					</td>
