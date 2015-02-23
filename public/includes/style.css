@@ -19,11 +19,7 @@ margin-right: 170px;
 .navbar-default .navbar-text{
 	color:#EEEEEE;
 }
-.center{
-	margin-left: auto;
-    margin-right: auto;
-    width: 90%;
-}
+
 
 
 .form-signin {
@@ -124,5 +120,3 @@ color:green;
 .blue{
 color:blue;
 }
-
-

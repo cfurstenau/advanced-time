@@ -7,7 +7,7 @@ module.exports = function(app, passport) {
 	// =====================================
 
 	app.post('/login', passport.authenticate('ldap', {session:true}), function(req, res, next) {
-		var now = new Date(2013, 6, 1); //test date
+		var now = new Date(2013, 10, 1); //test date
 		var start = new Date(now.setDate(now.getDate() - 28));
 		var employee = req.user.employeeID;
 		//send date, employee and res object to dynamics
@@ -19,8 +19,8 @@ module.exports = function(app, passport) {
 	// =====================================
 
 	app.post('/timecard',isLoggedIn, function(req, res) {
-		res.send({success:true});
-		dynamics.getTimecard(req.user,req.date);
+		console.log(req.body)
+		dynamics.getTimecard(req.body.employee,req.body.date, res);
 	});
 
 	// =====================================

@@ -51,13 +51,13 @@
 			      else{
 			        //if succesful, bind success message to message
 			        $scope.authenticated = true;
-              		$scope.reqData.user = data.userId;
+              		$scope.reqData.employee = data.userId;
 
 					for ( var i = 0; i < data.startWeeks.length; i++) {
 						if(i == 4)
 							break;
 						else{
-							$scope.weeks.push({startWeek: data.startWeeks[4-i], endWeek: data.endWeeks[4-i]});
+							$scope.weeks.push({startWeek: data.startWeeks[4-i], endWeek: data.endWeeks[4-i], peDate: data.peDates[4-i]});
 
 						}
 					}
@@ -79,7 +79,7 @@
 
 			  //Add a click handler for the dates in Timecards. When you click on a date it should send a
 			  //POST to "/timecard" with the username and the date that was clicked: {user: "user", date: "7/13/2014"}
-			  $scope.getTimecard = function(date){
+			  $scope.getTimecard = function(date, prettyDate){
     			$scope.reqData.date = date;
 
     			$http({
@@ -91,7 +91,7 @@
 			  }).success(function(data) {
 			  	  $scope.removeAllWeeks();
 			  	  //populate with SQL data
-			      $scope.payperiod = date;
+			      $scope.payperiod = prettyDate;
 
 	      			//Add dates to table
 	      			var Monday = new Date(date);
@@ -120,6 +120,9 @@
 
 					var Sunday = new Date(date);
 					$scope.Sunday = Sunday.toLocaleDateString();
+
+          for (i=0; i<data.timecard.length; i++)
+            $scope.timeRowsWeek[i] = data.timecard[i];
 			    });
 			};
 
@@ -240,7 +243,7 @@
               <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/"><image src= "includes/wwtas.jpg" width ="220" height="50" align=top></a>
-            <p class="navbar-text" ng-show="authenticated">Signed in as: {{  reqData.user }}</p>
+            <p class="navbar-text" ng-show="authenticated">Signed in as: {{  reqData.employee }}</p>
           </div>
 	</nav>
 
@@ -270,14 +273,14 @@
 
     <div class ="container container-fluid" ng-show="authenticated">
 
-		<div class="topbar center">
+		<div class="topbar">
 
 			<div class="btn-group btn-group-lg">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 					<span class="glyphicon glyphicon-time"></span> Payperiod <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu" role="menu">
-				  <li ng-repeat="week in weeks" ><a href='#' ng-click="getTimecard(week.endWeek)">{{ week.startWeek }} - {{ week.endWeek }}</a></li>
+				  <li ng-repeat="week in weeks" ><a href='#' ng-click="getTimecard(week.peDate, week.endWeek)">{{ week.startWeek }} - {{ week.endWeek }}</a></li>
 				</ul>
 			 </div>
 
@@ -295,21 +298,16 @@
 
 
 		</div>
-
-	<table class="table table-striped table-condensed center">
-			<thead>
-				<th align="center" ng-model="payperiod" >{{ payperiod }}</th>
-			</thead>
+    <h3 align="center" ng-model="payperiod" >{{ payperiod }}</h3>
+	<table class="table table-striped">
 			<tbody>
-				<tr class="center">
+				<tr>
 					<th scope="col" class="lead">
 					Project
 					</th>
 					<th class="lead">Task</th>
-					<th class="day-header">MON {{ Monday }}
-					</th>
-					<th class="day-header">TUE {{ Tuesday }}
-					</th>
+					<th class="day-header">MON {{ Monday }}</th>
+					<th class="day-header">TUE {{ Tuesday }}</th>
 					<th class="day-header">WED {{ Wednesday }}
 					</th>
 					<th class="day-header">THU {{ Thursday }}
@@ -328,74 +326,73 @@
 					<td></td>
 				</tr>
 
-				<tr class="row-total lead" ng-model="rowWeek" ng-repeat="rowWeek in timeRowsWeek">
+				<tr class="row-total" ng-model="rowWeek" ng-repeat="rowWeek in timeRowsWeek">
 					<td>{{ rowWeek.projDesc }}</td>
 					<td>{{ rowWeek.taskDesc }}</td>
-					<td class="Mon hoursList center">
-						<input type="text" size="4" placeholder="0.00">
+					<td class="Mon hoursList">
+						<input type="text" size="4" placeholder="0.00" ng-model="rowWeek.monHours">
 						<input type="text" size="4" placeholder="OVT" ng-show="showOVT">
 					</td>
-					<td class="Tue hoursList center">
-						<input type="text" size="4" placeholder="0.00">
+					<td class="Tue hoursList">
+						<input type="text" size="4" placeholder="0.00" ng-model="rowWeek.tueHours">
 						<input type="text" size="4" placeholder="OVT" ng-show="showOVT">
 					</td>
-					<td class="Wed hoursList center">
-						<input type="text" size="4" placeholder="0.00">
+					<td class="Wed hoursList">
+						<input type="text" size="4" placeholder="0.00" ng-model="rowWeek.wedHours">
 						<input type="text" size="4" placeholder="OVT" ng-show="showOVT">
 					</td>
-					<td class="Thu hoursList center">
-						<input type="text" size="4" placeholder="0.00">
+					<td class="Thu hoursList">
+						<input type="text" size="4" placeholder="0.00" ng-model="rowWeek.thuHours">
 						<input type="text" size="4" placeholder="OVT" ng-show="showOVT">
 					</td>
-					<td class="Fri hoursList center">
-						<input type="text" size="4" placeholder="0.00">
+					<td class="Fri hoursList">
+						<input type="text" size="4" placeholder="0.00" ng-model="rowWeek.friHours">
 						<input type="text" size="4" placeholder="OVT" ng-show="showOVT">
 					</td>
-					<td class="Sat hoursList center" ng-show="showWeekend">
-						<input type="text" size="4" placeholder="0.00" >
+					<td class="Sat hoursList" ng-show="showWeekend">
+						<input type="text" size="4" placeholder="0.00" ng-model="rowWeek.satHours">
 						<input type="text" size="4" placeholder="OVT" ng-show="showOVT">
 					</td>
-					<td class="Sun hoursList center" ng-show="showWeekend">
-						<input type="text" size="4" placeholder="0.00">
+					<td class="Sun hoursList" ng-show="showWeekend">
+						<input type="text" size="4" placeholder="0.00" ng-model="rowWeek.sunHours">
 						<input type="text" label="OVT" size="4" placeholder="OVT" ng-show="showOVT">
 					</td>
-					<td class="Overtime hoursList center blue">0
+					<td class="Overtime hoursList blue">0
 					</td>
-					<td class="comment center">
+					<td class="comment">
 						<input type="text" size="6" placeholder="Comments" >
 					</td>
-					<td class="clear center">
+					<td class="clear">
 						<button type="button" class="btn btn-warning btn-lg">
 							<span class="glyphicon glyphicon-remove-circle yellow"></span>
 						</button>
 					</td>
-					<td class="delete center">
+					<td class="delete">
 						<button type="button" class="btn btn-default btn-lg" ng-click="removeWeek(rowWeek.task)">
 							<span class="glyphicon glyphicon-trash red"></span>
 						</button>
 					</td>
 				</tr>
 
-				<tr class="row-total lead">
+				<tr class="row-total">
 					<td>TOTAL
 					</td>
 					<td>
 					</td>
-					<td class="Mon center ng-binding">0
+					<td class="Mon">0</td>
+					<td class="Tue">0
 					</td>
-					<td class="Tue center ng-binding">0
+					<td class="Wed">0
 					</td>
-					<td class="Wed center ng-binding">0
+					<td class="Thu">0
 					</td>
-					<td class="Thu center ng-binding">0
+					<td class="Fri">0
 					</td>
-					<td class="Fri center ng-binding">0
+					<td class="Sat" ng-show="showWeekend">0
 					</td>
-					<td class="Sat center ng-binding" ng-show="showWeekend">0
+					<td class="Sun" ng-show="showWeekend">0
 					</td>
-					<td class="Sun center ng-binding" ng-show="showWeekend">0
-					</td>
-					<td class="center ng-binding blue">0
+					<td class="blue">0
 					</td>
 					<td></td>
 					<td></td>
@@ -404,7 +401,7 @@
 			</tbody>
 		</table>
 
-		<table class="bottomrow table center">
+		<table class="bottomrow table">
 			<tbody>
 				<tr>
 					<td>

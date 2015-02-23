@@ -4,32 +4,11 @@ var TYPES = require('tedious').TYPES;
 var config = require('./../../config/sql.js');
 
 
-module.exports.testQuery = function() {
-  var connection = new Connection(config);
-
-  var request = new Request("select emp_name from PJEMPLOY where employee = 'CFURSTENAU'", function(err, rowCount) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(rowCount + ' rows');
-      }
-  });
-  request.on('row', function(columns) {
-      columns.forEach(function(column) {
-        console.log(column.metadata.colName + " = " + column.value);
-      });
-  });
-  connection.on('connect', function(err){
-    console.log(err);
-    connection.execSql(request);
-  });
-
-};
-
 module.exports.getUserData = function(currentdate, employee, res){
 	var connection = new Connection(config);
   	var startWeeks = [];
   	var endWeeks = [];
+    var peDates = [];
 	var sql = "select we_date from PJWEEK where we_date >= @currentdate";
 
 	var request = new Request(sql, function(err, rowCount) {
@@ -38,7 +17,7 @@ module.exports.getUserData = function(currentdate, employee, res){
       } else {
         //query was successful, send response
         console.log(rowCount + ' rows');
-        getProjects(employee, startWeeks, endWeeks, res);
+        getProjects(employee, startWeeks, endWeeks, peDates, res);
       }
   });
   request.addParameter('currentdate',TYPES.SmallDateTime, currentdate);
@@ -49,6 +28,7 @@ module.exports.getUserData = function(currentdate, employee, res){
   	endDate = new Date(columns[0].value);
     endDate.setDate(endDate.getDate() + 1);
     endWeeks.push((endDate).toLocaleDateString());
+    peDates.push(columns[0].value);
   });
 
   connection.on('connect', function(err){
@@ -58,26 +38,41 @@ module.exports.getUserData = function(currentdate, employee, res){
 
 };
 
-module.exports.getTimecard = function(user, date) {
+module.exports.getTimecard = function(user, date, res) {
+  var timecard = [];
 	var connection = new Connection(config);
-	var sql = "select * from PJLABHDR join PJLABDET on PJLABHDR.docnbr = PJLABDET.docnbr where employee = @user and pe_date = @date";
+	var sql = "select project_desc projDesc, pjt_entity_desc taskDesc, day1_hr1 monHours, day2_hr1 tueHours, "+
+            "day3_hr1 wedHours, day4_hr1 thuHours,day5_hr1 friHours, day6_hr1 satHours, day7_hr1 sunHours, PJLABDET.pjt_entity task, PJLABDET.project proj "+
+            "from dbo.PJLABHDR "+
+            "join dbo.PJLABDET "+
+            "on PJLABHDR.docnbr = PJLABDET.docnbr "+
+            "join dbo.PJPENT "+
+            "on PJLABDET.pjt_entity = PJPENT.pjt_entity "+
+            "join dbo.PJPROJ "+
+            "on PJLABDET.project = PJPROJ.project "+
+            "where PJLABHDR.employee = @user and PJLABHDR.pe_date = @date";
 
  	var request = new Request(sql, function(err, rowCount) {
       if (err) {
         console.log(err);
       } else {
         console.log(rowCount + ' rows');
+        res.send({success:true, timecard: timecard});
       }
   });
+  console.log(user);
 
+  dateObj = new Date(date);
   request.addParameter('user',TYPES.VarChar, user);
-  request.addParameter('date',TYPES.SmallDateTime, date);
+  request.addParameter('date',TYPES.SmallDateTime, dateObj);
 
 
   request.on('row', function(columns) {
+      var line = {};
       columns.forEach(function(column) {
-        console.log(column.metadata.colName + " = " + column.value);
+        line[column.metadata.colName] = column.value;
       });
+      timecard.push(line);
   });
 
   connection.on('connect', function(err){
@@ -86,7 +81,7 @@ module.exports.getTimecard = function(user, date) {
   });
 };
 
-function getProjects(employee, startWeeks, endWeeks, res){
+function getProjects(employee, startWeeks, endWeeks, peDates, res){
   var projects = [];
   var tasks = [];
 
@@ -110,7 +105,7 @@ function getProjects(employee, startWeeks, endWeeks, res){
       } else {
         console.log(rowCount + ' rows');
         res.send({success: true, userId: employee, startWeeks: startWeeks,
-                  endWeeks: endWeeks, projects: projects, tasks: tasks});
+                  endWeeks: endWeeks, peDates: peDates, projects: projects, tasks: tasks});
       }
   });
 
