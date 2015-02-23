@@ -123,6 +123,9 @@
 
           for (i=0; i<data.timecard.length; i++)
             $scope.timeRowsWeek[i] = data.timecard[i];
+            if (data.timecard[i].satHours != 0 || data.timecard[i].sunHours != 0) {
+              $scope.showWeekend = true;
+            }
 			    });
 			};
 

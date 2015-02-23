@@ -19,7 +19,6 @@ module.exports = function(app, passport) {
 	// =====================================
 
 	app.post('/timecard',isLoggedIn, function(req, res) {
-		console.log(req.body)
 		dynamics.getTimecard(req.body.employee,req.body.date, res);
 	});
 
