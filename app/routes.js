@@ -7,9 +7,11 @@ module.exports = function(app, passport) {
 	// =====================================
 
 	app.post('/login', passport.authenticate('ldap', {session:true}), function(req, res, next) {
-		var now = new Date(2013, 10, 1); //test date
+		var now = new Date(); //test date
 		var start = new Date(now.setDate(now.getDate() - 28));
 		var employee = req.user.employeeID;
+		var agent = req.headers['user-agent'];
+		console.log(employee + " logged in using " + agent + " at " + now);
 		//send date, employee and res object to dynamics
 		dynamics.getUserData(start, employee, res);
 	});

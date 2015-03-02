@@ -19,8 +19,19 @@ margin-right: 170px;
 .navbar-default .navbar-text{
 	color:#EEEEEE;
 }
+.center{
+	margin-left: auto;
+    margin-right: auto;
+}
 
+.bsgrid{
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
 
+a {
+  cursor: pointer;
+}
 
 .form-signin {
   max-width: 380px;

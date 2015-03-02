@@ -121,7 +121,7 @@
 					var Sunday = new Date(date);
 					$scope.Sunday = Sunday.toLocaleDateString();
 
-          for (i=0; i<data.timecard.length; i++)
+          for (i=0; i<data.timecard.length; i++) {
             $scope.timeRowsWeek[i] = data.timecard[i];
 
             var weekendHours = data.timecard[i].satHours + data.timecard[i].sunHours +
@@ -136,7 +136,8 @@
             if (otHours != 0){
               $scope.showOVT = true;
             }
-			    });
+          }
+			  });
 			};
 
 
@@ -164,6 +165,9 @@
 				$scope.project = "Select a Project";
 				$scope.assignProject = function(project, projectDesc){
     			$scope.project = projectDesc;
+          $scope.tasks = [];
+          $scope.taskDesc = "Select a Task";
+          $scope.addDisabled = true;
           for (i=0;i<$scope.availableTasks.length;i++){
             if ($scope.availableTasks[i].proj == project){
               $scope.tasks.push({index: i, taskDesc: $scope.availableTasks[i].taskDesc});
@@ -284,16 +288,16 @@
 
     </div> <!-- /container -->
 
-    <div class ="container container-fluid" ng-show="authenticated">
+    <div class ="conatiner container-fluid" ng-show="authenticated">
 
 		<div class="topbar">
 
 			<div class="btn-group btn-group-lg">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					<span class="glyphicon glyphicon-time"></span> Payperiod <span class="caret"></span>
+					<span class="glyphicon glyphicon-time"></span> Week <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu" role="menu">
-				  <li ng-repeat="week in weeks" ><a href='#' ng-click="getTimecard(week.peDate, week.endWeek)">{{ week.startWeek }} - {{ week.endWeek }}</a></li>
+				  <li ng-repeat="week in weeks" ><a ng-click="getTimecard(week.peDate, week.endWeek)">{{ week.startWeek }} - {{ week.endWeek }}</a></li>
 				</ul>
 			 </div>
 
@@ -414,45 +418,42 @@
 			</tbody>
 		</table>
 
-		<table class="bottomrow table">
-			<tbody>
-				<tr>
-					<td>
+
+				<div class="bottomrow row center">
+          <div class="col-sm-5 bsgrid">
 						<div class="input-group input-group-lg">
 							<span class="form-control">{{ project }}</span>
 								<span class="input-group-btn">
 									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 										<span class="caret"></span>
 									</button>
-										<ul class="dropdown-menu" role="menu">
-						  					<li ng-model="selectedProject" ng-repeat="selectedProject in projects" ng-click="assignProject(selectedProject.proj, selectedProject.projDesc)"><a href="#">{{ selectedProject.projDesc }}</a></li>
+										<ul class="dropdown-menu pull-right" role="menu">
+						  					<li ng-model="selectedProject" ng-repeat="selectedProject in projects" ng-click="assignProject(selectedProject.proj, selectedProject.projDesc)"><a>{{ selectedProject.projDesc }}</a></li>
 										</ul>
 								</span>
 						</div>
-					</td>
-					<td>
+          </div>
+          <div class="col-sm-5 bsgrid">
 						<div class="input-group input-group-lg">
 							<span class="form-control">{{ taskDesc }}</span>
 								<span class="input-group-btn">
 									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-disabled="taskDisabled">
 										<span class="caret"></span>
 									</button>
-										<ul class="dropdown-menu" role="menu">
-						  					<li ng-model="selectedTask" ng-repeat="selectedTask in tasks" ng-click="assignTask(selectedTask.index, selectedTask.taskDesc)"><a href="#">{{ selectedTask.taskDesc }}</a></li>
+										<ul class="dropdown-menu pull-right" role="menu">
+						  					<li ng-model="selectedTask" ng-repeat="selectedTask in tasks" ng-click="assignTask(selectedTask.index, selectedTask.taskDesc)"><a>{{ selectedTask.taskDesc }}</a></li>
 										</ul>
 								</span>
 						</div>
-					</td>
-					<td>
+          </div>
+            <div class="col-sm-2 bsgrid">
 							<button type="button" class="btn btn-submit btn-lg" ng-disabled="addDisabled" ng-click="addTimeRow()">
 								<span class="glyphicon glyphicon-plus"></span> Add
 							</button>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+            </div>
+        </div>
 
-		<div class ="ButtonRow btn-group-lg">
+		<div class ="ButtonRow btn-group-lg bsgrid">
 				<button type="button" class="btn btn-info btn-lg">
 					<span class="glyphicon glyphicon-save"></span> Save
 				</button>

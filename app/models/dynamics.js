@@ -14,9 +14,9 @@ module.exports.getUserData = function(currentdate, employee, res){
 	var request = new Request(sql, function(err, rowCount) {
       if (err) {
         console.log(err);
+        res.send(500, {success: false});
       } else {
         //query was successful, send response
-        console.log(rowCount + ' rows');
         getProjects(employee, startWeeks, endWeeks, peDates, res);
       }
   });
@@ -32,8 +32,11 @@ module.exports.getUserData = function(currentdate, employee, res){
   });
 
   connection.on('connect', function(err){
-  	console.log(err);
-		connection.execSql(request);
+  	if (err) {
+        console.log(err);
+    } else {
+        connection.execSql(request);
+    }
  	});
 
 };
@@ -59,11 +62,9 @@ module.exports.getTimecard = function(user, date, res) {
       if (err) {
         console.log(err);
       } else {
-        console.log(rowCount + ' rows');
         res.send({success:true, timecard: timecard});
       }
   });
-  console.log(user);
 
   dateObj = new Date(date);
   request.addParameter('user',TYPES.VarChar, user);
@@ -79,8 +80,11 @@ module.exports.getTimecard = function(user, date, res) {
   });
 
   connection.on('connect', function(err){
-    console.log(err);
-    connection.execSql(request);
+    if (err) {
+        console.log(err);
+    } else {
+        connection.execSql(request);
+    }
   });
 };
 
@@ -106,7 +110,6 @@ function getProjects(employee, startWeeks, endWeeks, peDates, res){
       if (err) {
         console.log(err);
       } else {
-        console.log(rowCount + ' rows');
         res.send({success: true, userId: employee, startWeeks: startWeeks,
                   endWeeks: endWeeks, peDates: peDates, projects: projects, tasks: tasks});
       }
@@ -133,14 +136,17 @@ function getProjects(employee, startWeeks, endWeeks, peDates, res){
   });
 
   connection.on('connect', function(err){
-    console.log(err);
-    connection.execSql(request);
+    if (err) {
+        console.log(err);
+    } else {
+        connection.execSql(request);
+    }
   });
 }
 
 function alreadyIn(array, obj){
-  for (each in array) {
-    if (each.proj = obj.proj){
+  for (i=0;i<array.length;i++) {
+    if (array[i].proj == obj.proj){
       return true;
     }
   }
