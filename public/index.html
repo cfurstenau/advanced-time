@@ -30,6 +30,7 @@
 			// $scope will allow this to pass between controller and view
 			$scope.formData = {};
 			$scope.reqData = {};
+      $scope.timecardData = {};
 			$scope.weeks = [];
       $scope.tasks = [];
 
@@ -51,7 +52,8 @@
 			      else{
 			        //if succesful, bind success message to message
 			        $scope.authenticated = true;
-              		$scope.reqData.employee = data.userId;
+              $scope.reqData.employee = data.userId;
+              $scope.timecardData.employee = data.userId;
 
 					for ( var i = 0; i < data.startWeeks.length; i++) {
 						if(i == 4)
@@ -64,6 +66,7 @@
 
           $scope.projects = data.projects;
           $scope.availableTasks = data.tasks;
+          $scope.timecardData.defaultSubacct = data.defaultSubacct;
 
 			      }
 			    }).error(function(data, status){
@@ -92,33 +95,35 @@
 			  	  $scope.removeAllWeeks();
 			  	  //populate with SQL data
 			      $scope.payperiod = prettyDate;
+            $scope.saveDisabled =false;
 
+            $scope.timecardData.docnbr = data.docnbr;
 	      			//Add dates to table
 	      			var Monday = new Date(date);
-	      			Monday.setDate(Monday.getDate() - 6);
+	      			Monday.setDate(Monday.getDate() - 5);
 					$scope.Monday = Monday.toLocaleDateString();
 
 					var Tuesday = new Date(date);
-	      			Tuesday.setDate(Tuesday.getDate() - 5);
+	      			Tuesday.setDate(Tuesday.getDate() - 4);
 					$scope.Tuesday = Tuesday.toLocaleDateString();
 
 					var Wednesday = new Date(date);
-	      			Wednesday.setDate(Wednesday.getDate() - 4);
+	      			Wednesday.setDate(Wednesday.getDate() - 3);
 					$scope.Wednesday = Wednesday.toLocaleDateString();
 
 					var Thursday = new Date(date);
-	      			Thursday.setDate(Thursday.getDate() - 3);
+	      			Thursday.setDate(Thursday.getDate() - 2);
 					$scope.Thursday = Thursday.toLocaleDateString();
 
 					var Friday = new Date(date);
-	      			Friday.setDate(Friday.getDate() - 2);
+	      			Friday.setDate(Friday.getDate() - 1);
 					$scope.Friday = Friday.toLocaleDateString();
 
 					var Saturday = new Date(date);
-	      			Saturday.setDate(Saturday.getDate() - 1);
 					$scope.Saturday = Saturday.toLocaleDateString();
 
 					var Sunday = new Date(date);
+              Sunday.setDate(Sunday.getDate() + 1);
 					$scope.Sunday = Sunday.toLocaleDateString();
 
           for (i=0; i<data.timecard.length; i++) {
@@ -140,7 +145,21 @@
 			  });
 			};
 
+        $scope.saveTimecard = function(){
+          $scope.timecardData.timecard = $scope.timeRowsWeek;
+          $http({
+          method  : 'POST',
+          url     : '/save',
+          data    : $.param($scope.timecardData), //pass in data as strings
+          withCredentials: true, //cookie
+          headers : { 'Content-Type' : 'application/x-www-form-urlencoded' } //set the headers so angular passing info as form data (not request payload)
+        }).success(function(data) {
+          alert("Save successful")
+        }).error(function(data, status){
+          alert("Save error")
+        });
 
+        };
 
 			  //open and hide Sat/Sun
 				$scope.satSun = function(){
@@ -231,6 +250,7 @@
 
 
 				$scope.timeRowsWeek = [];
+        $scope.saveDisabled = true;
 
 
 		}
@@ -378,13 +398,13 @@
 					<td class="Overtime hoursList blue">0
 					</td>
 					<td class="comment">
-						<input type="text" size="6" placeholder="Comments" >
+						<input type="text" size="6" placeholder="Comments" ng-model="rowWeek.comment" maxlength="30">
 					</td>
-					<td class="clear">
+					<!-- <td class="clear">
 						<button type="button" class="btn btn-warning btn-lg">
 							<span class="glyphicon glyphicon-remove-circle yellow"></span>
 						</button>
-					</td>
+					</td> -->
 					<td class="delete">
 						<button type="button" class="btn btn-default btn-lg" ng-click="removeWeek(rowWeek.task)">
 							<span class="glyphicon glyphicon-trash red"></span>
@@ -455,10 +475,10 @@
         </div>
 
 		<div class ="ButtonRow btn-group-lg bsgrid">
-				<button type="button" class="btn btn-info btn-lg">
+				<button type="button" class="btn btn-primary btn-lg" ng-click='saveTimecard()' ng-disabled="saveDisabled">
 					<span class="glyphicon glyphicon-save"></span> Save
 				</button>
-				<button type="button" class="btn btn-success btn-lg">
+				<button type="button" class="btn btn-success btn-lg" ng-disabled="saveDisabled">
 					<span class="glyphicon glyphicon-inbox"></span> Submit
 				</button>
 		</div>

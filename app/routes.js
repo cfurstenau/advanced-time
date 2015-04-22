@@ -25,6 +25,20 @@ module.exports = function(app, passport) {
 	});
 
 	// =====================================
+	// SAVE ============================
+	// =====================================
+
+	app.post('/save',isLoggedIn, function(req, res) {
+		if (req.body.docnbr) {
+			dynamics.updateTimecard(req.body.employee, req.body.timecard,
+				req.body.docnbr, req.body.defaultSubacct, res);
+		} else {
+			dynamics.createTimecard();
+		}
+
+	});
+
+	// =====================================
 	// LOGOUT ==============================
 	// =====================================
 	app.get('/logout', function(req, res) {
